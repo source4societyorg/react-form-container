@@ -9,6 +9,27 @@ You can optionally include the presentational components located at []() or roll
 
 The validation utility script located at []().
 
+Please be sure you have the following in your package.json:
+
+   "dependencies": {
+     "babel-polyfill": "6.23.0",
+     "immutable": "3.8.1",
+     "intl": "1.2.5",
+     "invariant": "2.2.2",
+     "prop-types": "15.5.10",
+     "react": "15.6.1",
+     "react-dom": "15.6.1",
+     "react-intl": "2.3.0",
+     "react-loadable": "4.0.3",
+     "react-redux": "5.0.5",
+     "redux": "3.6.0",
+     "redux-immutable": "4.0.0",
+     "redux-saga": "0.15.3",
+     "reselect": "3.0.1",
+     "styled-components": "2.0.0",
+     "warning": "3.0.0"
+   }
+
 ## Installation
 
 Pleas be sure you have the requirements mentioned in the previous section installed.

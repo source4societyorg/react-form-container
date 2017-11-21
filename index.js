@@ -5,7 +5,7 @@ import { compose } from 'redux';
 import { createStructuredSelector } from 'reselect';
 import injectReducer from 'utils/injectReducer';
 import reducer from './reducer';
-import { initializeForm, changeField, submitForm } from './actions';
+import { initializeValues, changeField, submitForm } from './actions';
 import Form from '../../components/Form';
 import Field from '../../components/Form/Field';
 import Button from '../../components/Button';
@@ -16,8 +16,10 @@ import {
 
 export class FormContainer extends React.PureComponent { // eslint-disable-line react/prefer-stateless-function
 
-  componentDidMount() {
-    this.props.onMount(this.props.id, this.props.fieldData);
+  componentWillReceiveProps(nextProps) {
+    if (typeof nextProps.fieldData !== 'undefined' && !nextProps.fieldData.equals(this.props.fieldData)) {
+      this.props.initializeValues(this.props.id, nextProps.fieldData);
+    }
   }
 
   renderFields() {
@@ -63,7 +65,7 @@ FormContainer.propTypes = {
   fieldData: PropTypes.object,
   formValues: PropTypes.object,
   submitLabel: PropTypes.string,
-  onMount: PropTypes.func,
+  initializeValues: PropTypes.func,
   onChangeFieldValue: PropTypes.func,
   onSubmit: PropTypes.func,
 };
@@ -77,7 +79,7 @@ FormContainer.defaultProps = {
 };
 
 export const mapDispatchToProps = (dispatch, ownProps) => ({
-  onMount: (id, fieldData) => dispatch(initializeForm(id, fieldData)),
+  initializeValues: (id, fieldData) => dispatch(initializeValues(id, fieldData)),
   onChangeFieldValue: (evt, field) => dispatch(changeField(ownProps.id, field, evt.target.value)),
   onSubmit: (evt, id) => { evt.preventDefault(); return dispatch(submitForm(ownProps.validation, id)); },
 });

@@ -20,14 +20,20 @@ function formReducer(state = initialState, action) {
 
   switch (action.type) {
     case FORM_INITIALIZED:
-      updatedFormValues = {};
-      updatedFormValues[action.id] = {};
-      action.fieldData.get('data').keySeq().forEach((field) => {
-        updatedFormValues[action.id][field] = { value: action.fieldData.getIn(['view', field], ''), isValid: true, validationMessage: '' };
-      });
-      return state
-        .set('formValues', fromJS(updatedFormValues))
-        .set('isValid', initialState.isValid);
+      if (typeof action.fieldData !== 'undefined') {
+        updatedFormValues = {};
+        updatedFormValues[action.id] = {};
+
+        action.fieldData.get('data').keySeq().forEach((field) => {
+          updatedFormValues[action.id][field] = { value: action.fieldData.getIn(['view', field], ''), isValid: true, validationMessage: '' };
+        });
+
+        return state
+            .set('formValues', fromJS(updatedFormValues))
+            .set('isValid', initialState.isValid);
+      }
+
+      return state;
     case CHANGE_FIELD:
       return state
         .setIn(['formValues', action.id, action.property], ImmutableMap({ value: action.value, isValid: true, validationMessage: '' }))
@@ -35,7 +41,7 @@ function formReducer(state = initialState, action) {
     case SUBMIT_FORM:
       isValid = true;
       updatedState = state;
-      state.getIn(['formValues', action.id]).keySeq().forEach((field, fieldIndex) => {
+      updatedState.getIn(['formValues', action.id]).keySeq().forEach((field, fieldIndex) => {
         let validationMessage = '';
         const validatorConfig = action.validation[fieldIndex] || [];
         for (let configIndex = 0; configIndex < validatorConfig.length; configIndex += 1) {

@@ -4,7 +4,7 @@ import {
     SUBMIT_FORM,
 } from './constants';
 
-export function initializeForm(id, fieldData) {
+export function initializeValues(id, fieldData) {
   return {
     type: FORM_INITIALIZED,
     id,
