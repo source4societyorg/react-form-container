@@ -77,6 +77,7 @@ Then add the component `<FormContainer />` to your layout. An example is as foll
                 }
             ]
         ]} 
+        submitCallback={(isValid, formValues) => console.log('If form ' + isValid + ' then output ' + formValues)}
         submitLabel="Log In"
     />
 
