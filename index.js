@@ -42,7 +42,7 @@ export class FormContainer extends React.PureComponent { // eslint-disable-line 
 
   renderSubmit() {
     if (typeof this.props.submitLabel !== 'undefined') {
-      return <Button label={this.props.submitLabel} onClick={(evt) => this.props.onSubmit(evt, this.props.id)} />;
+      return <Button label={this.props.submitLabel} onClick={(evt) => this.props.onSubmit(evt, this.props.id, this.props.submitCallback)} />;
     }
 
     return null;
@@ -50,7 +50,7 @@ export class FormContainer extends React.PureComponent { // eslint-disable-line 
 
   render() {
     return (
-      <Form id={this.props.id} onSubmit={(evt) => this.props.onSubmit(evt, this.props.id)}>
+      <Form id={this.props.id} onSubmit={(evt) => this.props.onSubmit(evt, this.props.id, this.props.submitCallback)}>
         {this.renderFields()}
         {this.renderSubmit()}
       </Form>
@@ -68,6 +68,7 @@ FormContainer.propTypes = {
   initializeValues: PropTypes.func,
   onChangeFieldValue: PropTypes.func,
   onSubmit: PropTypes.func,
+  submitCallback: PropTypes.func,
 };
 
 FormContainer.defaultProps = {
@@ -81,7 +82,7 @@ FormContainer.defaultProps = {
 export const mapDispatchToProps = (dispatch, ownProps) => ({
   initializeValues: (id, fieldData) => dispatch(initializeValues(id, fieldData)),
   onChangeFieldValue: (evt, field) => dispatch(changeField(ownProps.id, field, evt.target.value)),
-  onSubmit: (evt, id) => { evt.preventDefault(); return dispatch(submitForm(ownProps.validation, id)); },
+  onSubmit: (evt, id, submitCallback) => { evt.preventDefault(); return dispatch(submitForm(ownProps.validation, id, submitCallback)); },
 });
 
 const mapStateToProps = createStructuredSelector({

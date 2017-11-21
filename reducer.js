@@ -51,9 +51,12 @@ function formReducer(state = initialState, action) {
           updatedState = updatedState.setIn(['formValues', action.id, field], ImmutableMap({ value, isValid: isFieldValid, validationMessage }));
           if (!isFieldValid) {
             isValid = false;
-          }
+          }         
         }
       });
+      if(typeof action.callback !== 'undefined') {
+          action.callback(isValid, updatedState.get('formValues').toJS())
+      }
       return updatedState.set('isValid', isValid);
     default:
       return state;

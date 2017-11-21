@@ -21,10 +21,11 @@ export function changeField(id, property, value) {
   };
 }
 
-export function submitForm(validation, id) {
+export function submitForm(validation, id, callback) {
   return {
     type: SUBMIT_FORM,
     validation,
     id,
+    callback
   };
 }
