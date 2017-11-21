@@ -5,9 +5,7 @@ A Higher Order Component (HOC) for handling dynamic forms with React, Redux, Sag
 
 This library expects that you are using [react-boilerplate](https://github.com/react-boilerplate/react-boilerplate). 
 
-You can optionally include the presentational components located at []() or roll your own. 
-
-The validation utility script located at []().
+You can optionally include the presentational components located at [source4societyorg/react-form-components](https://github.com/source4societyorg/react-form-components) or roll your own. 
 
 Please be sure you have the following in your package.json:
 
@@ -39,10 +37,6 @@ We recommending forking this repository and using as a submodule. To use as a gi
     git submodule add git@github.com:source4societyorg/react-form-container.git
 
 Replace the url with the url of your fork as needed.
-
-Package is available via npm:
-
-    npm install react-form-container
 
 For more information on how to use submodules, refer to the [git submodule reference](https://git-scm.com/docs/git-submodule) and this article from [TechJini](http://www.techjini.com/blog/working-with-git-submodules/)
 
