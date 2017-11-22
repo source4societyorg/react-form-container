@@ -4,7 +4,9 @@ import { connect } from 'react-redux';
 import { compose } from 'redux';
 import { createStructuredSelector } from 'reselect';
 import injectReducer from 'utils/injectReducer';
+import injectSaga from 'utils/injectSaga';
 import reducer from './reducer';
+import saga from './saga';
 import { initializeValues, changeField, submitForm } from './actions';
 import Form from '../../components/Form';
 import Field from '../../components/Form/Field';
@@ -42,7 +44,7 @@ export class FormContainer extends React.PureComponent { // eslint-disable-line 
 
   renderSubmit() {
     if (typeof this.props.submitLabel !== 'undefined') {
-      return <Button label={this.props.submitLabel} onClick={(evt) => this.props.onSubmit(evt, this.props.id, this.props.submitCallback)} />;
+      return <Button label={this.props.submitLabel} onClick={(evt) => this.props.onSubmit(evt, this.props.formValues, this.props.id, this.props.callbackAction)} />;
     }
 
     return null;
@@ -50,7 +52,7 @@ export class FormContainer extends React.PureComponent { // eslint-disable-line 
 
   render() {
     return (
-      <Form id={this.props.id} onSubmit={(evt) => this.props.onSubmit(evt, this.props.id, this.props.submitCallback)}>
+      <Form id={this.props.id} onSubmit={(evt) => this.props.onSubmit(evt, this.props.formValues, this.props.id, this.props.callbackAction)}>
         {this.renderFields()}
         {this.renderSubmit()}
       </Form>
@@ -68,7 +70,7 @@ FormContainer.propTypes = {
   initializeValues: PropTypes.func,
   onChangeFieldValue: PropTypes.func,
   onSubmit: PropTypes.func,
-  submitCallback: PropTypes.func,
+  callbackAction: PropTypes.func,
 };
 
 FormContainer.defaultProps = {
@@ -82,7 +84,7 @@ FormContainer.defaultProps = {
 export const mapDispatchToProps = (dispatch, ownProps) => ({
   initializeValues: (id, fieldData) => dispatch(initializeValues(id, fieldData)),
   onChangeFieldValue: (evt, field) => dispatch(changeField(ownProps.id, field, evt.target.value)),
-  onSubmit: (evt, id, submitCallback) => { evt.preventDefault(); return dispatch(submitForm(ownProps.validation, id, submitCallback)); },
+  onSubmit: (evt, formValues, id, callbackAction) => { evt.preventDefault(); return dispatch(submitForm(formValues, ownProps.validation, id, callbackAction)); },
 });
 
 const mapStateToProps = createStructuredSelector({
@@ -91,9 +93,11 @@ const mapStateToProps = createStructuredSelector({
 });
 
 const withReducer = injectReducer({ key: 'form', reducer });
+const withSaga = injectSaga({ key: 'form', saga });
 const withConnect = connect(mapStateToProps, mapDispatchToProps);
 
 export default compose(
   withReducer,
+  withSaga,
   withConnect
 )(FormContainer);

@@ -2,6 +2,7 @@ import {
     FORM_INITIALIZED,
     CHANGE_FIELD,
     SUBMIT_FORM,
+    SUBMITTED_FORM
 } from './constants';
 
 export function initializeValues(id, fieldData) {
@@ -21,11 +22,20 @@ export function changeField(id, property, value) {
   };
 }
 
-export function submitForm(validation, id, callback) {
+export function submitForm(formValues, validation, id, callbackAction) {
   return {
     type: SUBMIT_FORM,
+    formValues,
     validation,
     id,
-    callback
+    callbackAction
+  };
+}
+
+export function formSubmitted(isValid, formValues) {
+  return {
+    type: SUBMITTED_FORM,
+    formValues,
+    isValid
   };
 }
