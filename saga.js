@@ -4,7 +4,7 @@ import { formSubmitted } from './actions';
 import validators from './validators';
 import { fromJS, Map as ImmutableMap } from 'immutable';
 
-export function* validateFormData(action) {
+export function* validateFormData(action) {  
   let clonedFormValues = action.formValues;
   let isValid = true;
   action.formValues.get(action.id).keySeq().forEach((field, fieldIndex) => {
@@ -19,10 +19,11 @@ export function* validateFormData(action) {
         isValid = false;
       }         
     }
-  });   
+  });  
+
   yield put(formSubmitted(isValid, clonedFormValues));
-  if( typeof callbackAction !== 'undefined') {
-     yield put(callbackAction(isValid, clonedFormValues));
+  if( typeof action.callbackAction !== 'undefined') {
+     yield put(action.callbackAction(isValid, clonedFormValues));
   }
 }
 
