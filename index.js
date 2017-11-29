@@ -1,4 +1,5 @@
 import React from 'react';
+import { Map as ImmutableMap } from 'immutable';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { compose } from 'redux';
@@ -10,7 +11,6 @@ import saga from './saga';
 import { initializeValues, changeField, submitForm } from './actions';
 import Form from '../../components/Form';
 import Field from '../../components/Form/Field';
-import Button from '../../components/Button';
 import {
     makeSelectFormValues,
     makeSelectIsValid,
@@ -25,17 +25,20 @@ export class FormContainer extends React.PureComponent { // eslint-disable-line 
   }
 
   renderFields() {
-    if (typeof this.props.fieldData !== 'undefined' && typeof this.props.fieldData.get('data') !== 'undefined') {
+    if (typeof this.props.fieldData !== 'undefined' && typeof this.props.fieldData.get('data') !== 'undefined') {       
       return this.props.fieldData.get('data').keySeq().map((field, index) =>
         (<Field
           key={field}
+          id={field}
           labelText={this.props.labels[index]}
           fieldType={this.props.fieldData.getIn(['data', field, 'widget'], 'text')}
           onChange={(evt) => this.props.onChangeFieldValue(evt, field)}
           value={this.props.formValues.getIn([this.props.id, field, 'value'], '')}
           isValid={this.props.formValues.getIn([this.props.id, field, 'isValid'])}
-          validationMessage={this.props.formValues.getIn([this.props.id, field, 'validationMessage'])}
-        />)
+          validationMessage={this.props.formValues.getIn([this.props. id, field, 'validationMessage'])}
+          layout={this.props.fieldData.getIn(['data', field, 'layout'], 'vertical')}
+          options={this.props.fieldData.getIn(['data', field, 'options'], ImmutableMap({}))}
+        />)     
         );
     }
 
@@ -44,7 +47,7 @@ export class FormContainer extends React.PureComponent { // eslint-disable-line 
 
   renderSubmit() {
     if (typeof this.props.submitLabel !== 'undefined') {
-      return <Button label={this.props.submitLabel} onClick={(evt) => this.props.onSubmit(evt, this.props.formValues, this.props.id, this.props.callbackAction)} />;
+      return <button onClick={(evt) => this.props.onSubmit(evt, this.props.formValues, this.props.id, this.props.callbackAction)}>{this.props.submitLabel}</button>;
     }
 
     return null;
@@ -55,6 +58,7 @@ export class FormContainer extends React.PureComponent { // eslint-disable-line 
       <Form id={this.props.id} onSubmit={(evt) => this.props.onSubmit(evt, this.props.formValues, this.props.id, this.props.callbackAction)}>
         {this.renderFields()}
         {this.renderSubmit()}
+        {this.props.children}
       </Form>
     );
   }
