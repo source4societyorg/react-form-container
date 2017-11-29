@@ -26,19 +26,22 @@ export class FormContainer extends React.PureComponent { // eslint-disable-line 
 
   renderFields() {
     if (typeof this.props.fieldData !== 'undefined' && typeof this.props.fieldData.get('data') !== 'undefined') {       
-      return this.props.fieldData.get('data').keySeq().map((field, index) =>
-        (<Field
-          key={field}
-          id={field}
-          labelText={this.props.labels[index]}
-          fieldType={this.props.fieldData.getIn(['data', field, 'widget'], 'text')}
-          onChange={(evt) => this.props.onChangeFieldValue(evt, field)}
-          value={this.props.formValues.getIn([this.props.id, field, 'value'], '')}
-          isValid={this.props.formValues.getIn([this.props.id, field, 'isValid'])}
-          validationMessage={this.props.formValues.getIn([this.props. id, field, 'validationMessage'])}
-          layout={this.props.fieldData.getIn(['data', field, 'layout'], 'vertical')}
-          options={this.props.fieldData.getIn(['data', field, 'options'], ImmutableMap({}))}
-        />)     
+      return this.props.fieldData.get('data').keySeq().map((field, index) => (
+            <Field
+              key={field}
+              id={field}
+              labelText={this.props.labels[index]}
+              fieldType={this.props.fieldData.getIn(['data', field, 'widget'], 'text')}
+              onChange={(evt) => this.props.onChangeFieldValue(evt, field)}
+              value={this.props.formValues.getIn([this.props.id, field, 'value'], '')}
+              isValid={this.props.formValues.getIn([this.props.id, field, 'isValid'])}
+              validationMessage={this.props.formValues.getIn([this.props. id, field, 'validationMessage'])}
+              layout={this.props.fieldData.getIn(['data', field, 'layout'], 'vertical')}
+              options={this.props.fieldData.getIn(['data', field, 'options'], ImmutableMap({}))}
+              hideLabel={this.props.fieldData.getIn(['data', field, 'hideLabel'], false)}
+            >
+                {this.props.fieldData.getIn(['data', field, 'children'], null)}
+            </Field>)     
         );
     }
 
