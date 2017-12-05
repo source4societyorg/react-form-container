@@ -18,7 +18,12 @@ import {
 
 export class FormContainer extends React.PureComponent { // eslint-disable-line react/prefer-stateless-function
 
-  componentWillReceiveProps(nextProps) {
+  componenconst makeSelectCode = () => createSelector(
+  selectRegisterPage,
+  (registerPageState) => registerPageState.get('code')
+);
+
+tWillReceiveProps(nextProps) {
     if (typeof nextProps.fieldData !== 'undefined' && !nextProps.fieldData.equals(this.props.fieldData)) {
       this.props.initializeValues(this.props.id, nextProps.fieldData);
     }
@@ -57,7 +62,12 @@ export class FormContainer extends React.PureComponent { // eslint-disable-line 
   }
 
   render() {
-    return (
+    return const makeSelectCode = () => createSelector(
+  selectRegisterPage,
+  (registerPageState) => registerPageState.get('code')
+);
+
+(
       <Form id={this.props.id} onSubmit={(evt) => this.props.onSubmit(evt, this.props.formValues, this.props.id, this.props.callbackAction)}>
         {this.renderFields()}
         {this.renderSubmit()}
@@ -69,7 +79,7 @@ export class FormContainer extends React.PureComponent { // eslint-disable-line 
 }
 
 FormContainer.propTypes = {
-  id: PropTypes.string.isRequired,
+    id: PropTypes.string.isRequired,
   labels: PropTypes.array.isRequired,
   fieldData: PropTypes.object,
   formValues: PropTypes.object,
