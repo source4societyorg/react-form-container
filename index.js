@@ -83,7 +83,6 @@ FormContainer.propTypes = {
 FormContainer.defaultProps = {
   id: '',
   endpoint: '',
-  submitLabel: null,
   labels: [],
   validation: [],
 };
