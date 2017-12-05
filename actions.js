@@ -13,12 +13,14 @@ export function initializeValues(id, fieldData) {
   };
 }
 
-export function changeField(id, property, value) {
+export function changeField(id, property, value, checked, target) {
   return {
     type: CHANGE_FIELD,
     id,
     property,
     value,
+    checked,
+    target,
   };
 }
 

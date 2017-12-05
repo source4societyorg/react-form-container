@@ -31,7 +31,7 @@ function formReducer(state = initialState, action) {
       return state;
     case CHANGE_FIELD:
       return state
-        .setIn(['formValues', action.id, action.property], ImmutableMap({ value: action.value, isValid: true, validationMessage: '' }))
+        .setIn(['formValues', action.id, action.property], ImmutableMap({ value: action.value, isValid: true, validationMessage: '', checked: action.checked }))
         .set('isValid', initialState.isValid);
     case SUBMITTED_FORM:
       return state
