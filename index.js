@@ -18,13 +18,14 @@ import {
 
 export class FormContainer extends React.PureComponent { // eslint-disable-line react/prefer-stateless-function
 
-  componenconst makeSelectCode = () => createSelector(
-  selectRegisterPage,
-  (registerPageState) => registerPageState.get('code')
-);
+  componentDidMount() {
+    if(typeof this.props.fieldData !== 'undefined') {    
+      this.props.initializeValues(this.props.id, this.props.fieldData);
+    }
+  }
 
-tWillReceiveProps(nextProps) {
-    if (typeof nextProps.fieldData !== 'undefined' && !nextProps.fieldData.equals(this.props.fieldData)) {
+  componentWillReceiveProps(nextProps) {    
+    if (typeof nextProps.fieldData !== 'undefined' && !nextProps.fieldData.equals(this.props.fieldData)) {     
       this.props.initializeValues(this.props.id, nextProps.fieldData);
     }
   }
@@ -62,12 +63,7 @@ tWillReceiveProps(nextProps) {
   }
 
   render() {
-    return const makeSelectCode = () => createSelector(
-  selectRegisterPage,
-  (registerPageState) => registerPageState.get('code')
-);
-
-(
+    return (
       <Form id={this.props.id} onSubmit={(evt) => this.props.onSubmit(evt, this.props.formValues, this.props.id, this.props.callbackAction)}>
         {this.renderFields()}
         {this.renderSubmit()}
@@ -79,7 +75,7 @@ tWillReceiveProps(nextProps) {
 }
 
 FormContainer.propTypes = {
-    id: PropTypes.string.isRequired,
+  id: PropTypes.string.isRequired,
   labels: PropTypes.array.isRequired,
   fieldData: PropTypes.object,
   formValues: PropTypes.object,
@@ -93,13 +89,14 @@ FormContainer.propTypes = {
 FormContainer.defaultProps = {
   id: '',
   endpoint: '',
+  submitLabel: null,
   labels: [],
   validation: [],
 };
 
 export const mapDispatchToProps = (dispatch, ownProps) => ({
   initializeValues: (id, fieldData) => dispatch(initializeValues(id, fieldData)),
-  onChangeFieldValue: (evt, field) => dispatch(changeField(ownProps.id, field, evt.target.value, evt.target.checked, evt.target)),
+  onChangeFieldValue: (evt, field) => dispatch(changeField(ownProps.id, field, evt.target.value)),
   onSubmit: (evt, formValues, id, callbackAction) => { evt.preventDefault(); return dispatch(submitForm(formValues, ownProps.validation, id, callbackAction)); },
 });
 
@@ -116,4 +113,4 @@ export default compose(
   withReducer,
   withSaga,
   withConnect
-)(FormContainer);
+)(FormContainer);    
