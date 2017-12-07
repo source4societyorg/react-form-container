@@ -12,6 +12,7 @@ import { initializeValues, changeField, submitForm } from './actions';
 import Form from '../../components/Form';
 import Field from '../../components/Form/Field';
 import {
+    makeSelectSubmitDisabled,
     makeSelectFormValues,
     makeSelectIsValid,
 } from './selectors';
@@ -56,7 +57,7 @@ export class FormContainer extends React.PureComponent { // eslint-disable-line 
 
   renderSubmit() {
     if (typeof this.props.submitLabel !== 'undefined') {
-      return <button onClick={(evt) => this.props.onSubmit(evt, this.props.formValues, this.props.id, this.props.callbackAction)}>{this.props.submitLabel}</button>;
+      return <button disabled={this.props.submitDisabled} onClick={(evt) => this.props.onSubmit(evt, this.props.formValues, this.props.id, this.props.callbackAction)}>{this.props.submitLabel}</button>;
     }
 
     return null;
@@ -84,6 +85,7 @@ FormContainer.propTypes = {
   onChangeFieldValue: PropTypes.func,
   onSubmit: PropTypes.func,
   callbackAction: PropTypes.func,
+  submitDisabled: PropTypes.bool,
 };
 
 FormContainer.defaultProps = {
@@ -103,6 +105,7 @@ export const mapDispatchToProps = (dispatch, ownProps) => ({
 const mapStateToProps = createStructuredSelector({
   formValues: makeSelectFormValues(),
   isValid: makeSelectIsValid(),
+  submitDisabled: makeSelectSubmitDisabled(),
 });
 
 const withReducer = injectReducer({ key: 'form', reducer });

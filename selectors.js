@@ -16,9 +16,14 @@ const makeSelectIsValid = () => createSelector(
   (formState) => formState.get('isValid')
 );
 
+const makeSelectSubmitDisabled = () => createSelector(
+  selectForm,
+  (formState) => formState.get('submitDisabled')
+);
 
 export {
     selectForm,
     makeSelectFormValues,
     makeSelectIsValid,
+    makeSelectSubmitDisabled,
 };

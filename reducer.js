@@ -3,12 +3,14 @@ import { fromJS, Map as ImmutableMap } from 'immutable';
 import {
   FORM_INITIALIZED,
   CHANGE_FIELD,
-  SUBMITTED_FORM
+  SUBMITTED_FORM,
+  SUBMIT_FORM,
 } from './constants';
 
 const initialState = fromJS({
   formValues: {},
   isValid: false,
+  submitDisabled: false,
 });
 
 function formReducer(state = initialState, action) {
@@ -29,6 +31,9 @@ function formReducer(state = initialState, action) {
             .set('isValid', initialState.isValid);
       }
       return state;
+    case SUBMIT_FORM:
+      return state
+        .set('submitDisabled', true)
     case CHANGE_FIELD:
       return state
         .setIn(['formValues', action.id, action.property], ImmutableMap({ value: action.value, isValid: true, validationMessage: '', checked: action.checked }))
@@ -37,6 +42,7 @@ function formReducer(state = initialState, action) {
       return state
         .set('formValues', action.formValues)
         .set('isValid', action.isValid)
+        .set('submitDisabled', false)
     default:
       return state;
   }
