@@ -37,6 +37,7 @@ export class FormContainer extends React.PureComponent { // eslint-disable-line 
             <Field
               key={field}
               id={field}
+              fieldData={this.props.fieldData.getIn(['data', field], {})}
               labelText={this.props.labels[index]}
               fieldType={this.props.fieldData.getIn(['data', field, 'widget'], 'text')}
               onChange={(evt) => this.props.onChangeFieldValue(evt, field)}
