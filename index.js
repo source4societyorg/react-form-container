@@ -47,6 +47,7 @@ export class FormContainer extends React.PureComponent { // eslint-disable-line 
               layout={this.props.fieldData.getIn(['data', field, 'layout'], 'vertical')}
               options={this.props.fieldData.getIn(['data', field, 'options'], ImmutableMap({}))}
               hideLabel={this.props.fieldData.getIn(['data', field, 'hideLabel'], false)}
+              checked={this.props.formValues.getIn([this.props.id, field, 'checked'], this.props.fieldData.getIn(['data', field, 'checked']) || false)}
             >
                 {this.props.fieldData.getIn(['data', field, 'children'], null)}
             </Field>)     
