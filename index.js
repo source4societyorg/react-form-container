@@ -32,29 +32,37 @@ export class FormContainer extends React.PureComponent { // eslint-disable-line 
   }
 
   renderFields() {
-    if (typeof this.props.fieldData !== 'undefined' && typeof this.props.fieldData.get('data') !== 'undefined') {       
-      return this.props.fieldData.get('data').keySeq().map((field, index) => (
-            <Field
-              key={field}
-              id={field}
-              fieldData={this.props.fieldData.getIn(['data', field], {})}
-              labelText={this.props.labels[index]}
-              fieldType={this.props.fieldData.getIn(['data', field, 'widget'], 'text')}
-              onChange={(evt) => this.props.onChangeFieldValue(evt, field)}
-              value={this.props.formValues.getIn([this.props.id, field, 'value'], '')}
-              isValid={this.props.formValues.getIn([this.props.id, field, 'isValid'])}
-              validationMessage={this.props.formValues.getIn([this.props. id, field, 'validationMessage'])}
-              layout={this.props.fieldData.getIn(['data', field, 'layout'], 'vertical')}
-              options={this.props.fieldData.getIn(['data', field, 'options'], ImmutableMap({}))}
-              hideLabel={this.props.fieldData.getIn(['data', field, 'hideLabel'], false)}
-              checked={this.props.formValues.getIn([this.props.id, field, 'checked'], this.props.fieldData.getIn(['data', field, 'checked']) || false)}
-            >
-                {this.props.fieldData.getIn(['data', field, 'children'], null)}
-            </Field>)     
-        );
+    let fields = [];
+    let fieldPointer = null;
+    if (typeof this.props.fieldData !== 'undefined' && typeof this.props.fieldData.get('data') !== 'undefined') {      
+      for(let index = 0; index <= this.props.fieldData.get('data').size; index++) {
+        for(let field of this.props.fieldData.get('data').entries()) {
+          if(field[1].get('propertyOrder', 0) === index) {
+            fields.push(
+              <Field
+                key={field[0]}
+                id={field[0]}
+                fieldData={field[1]}
+                labelText={index === 0 ? null : this.props.labels[index-1]}
+                fieldType={field[1].get('widget', 'text')}
+                onChange={(evt) => this.props.onChangeFieldValue(evt, field[0])}
+                value={this.props.formValues.getIn([this.props.id, field[0], 'value'], '')}
+                isValid={this.props.formValues.getIn([this.props.id, field[0], 'isValid'])}
+                validationMessage={this.props.formValues.getIn([this.props. id, field[0], 'validationMessage'])}
+                layout={field[1].get('layout', 'vertical')}
+                options={field[1].get('options', ImmutableMap({}))}
+                hideLabel={field[1].get('hideLabel', false)}
+                checked={this.props.formValues.getIn([this.props.id, field[0], 'checked'], field[1].get('checked', false))}
+                text={field[1].get('text')}
+              >
+                  {field[1].get('children', null)}
+              </Field>     
+            );
+          }
+        }
+      }
     }
-
-    return null;
+    return fields;
   }
 
   renderSubmit() {
