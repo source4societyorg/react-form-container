@@ -67,7 +67,7 @@ export class FormContainer extends React.PureComponent { // eslint-disable-line 
 
   renderSubmit() {
     if (typeof this.props.submitLabel !== 'undefined') {
-      return <button disabled={this.props.submitDisabled} onClick={(evt) => this.props.onSubmit(evt, this.props.formValues, this.props.id, this.props.callbackAction)}>{this.props.submitLabel}</button>;
+      return <button className={'submit ' + (this.props.submitDisabled ? 'disabled' : '')} disabled={this.props.submitDisabled} onClick={(evt) => this.props.onSubmit(evt, this.props.formValues, this.props.id, this.props.callbackAction, this.props.fieldData)}>{this.props.submitLabel}</button>;
     }
 
     return null;
@@ -75,7 +75,7 @@ export class FormContainer extends React.PureComponent { // eslint-disable-line 
 
   render() {
     return (
-      <Form id={this.props.id} onSubmit={(evt) => this.props.onSubmit(evt, this.props.formValues, this.props.id, this.props.callbackAction)}>
+      <Form id={this.props.id} onSubmit={(evt) => this.props.onSubmit(evt, this.props.formValues, this.props.id, this.props.callbackAction, this.props.fieldData)}>
         {this.renderFields()}
         {this.renderSubmit()}
         {this.props.children}
@@ -109,7 +109,7 @@ FormContainer.defaultProps = {
 export const mapDispatchToProps = (dispatch, ownProps) => ({
   initializeValues: (id, fieldData) => dispatch(initializeValues(id, fieldData)),
   onChangeFieldValue: (evt, field) => dispatch(changeField(ownProps.id, field, evt.target.value, evt.target.checked, evt.target)),
-  onSubmit: (evt, formValues, id, callbackAction) => { evt.preventDefault(); return dispatch(submitForm(formValues, ownProps.validation, id, callbackAction)); },
+  onSubmit: (evt, formValues, id, callbackAction, fieldData) => { evt.preventDefault(); return dispatch(submitForm(formValues, ownProps.validation, id, callbackAction, fieldData)); },
 });
 
 const mapStateToProps = createStructuredSelector({

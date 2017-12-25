@@ -21,10 +21,11 @@ function formReducer(state = initialState, action) {
       if (typeof action.fieldData !== 'undefined') {
         updatedFormValues = {};
         updatedFormValues[action.id] = {};
-        action.fieldData.get('data').keySeq().forEach((field) => {
-          updatedFormValues[action.id][field] = { value: action.fieldData.getIn(['views', field, 'value'], ''), isValid: action.fieldData.getIn(['views', field, 'isValid'], true), validationMessage: '', checked: action.fieldData.getIn(['views', field, 'checked'], false) };
+        action.fieldData.get('data').keySeq().forEach((field) => {    
+          if (action.fieldData.getIn(['data', field, 'widget'], 'text') !== 'divider') { 
+            updatedFormValues[action.id][field] = { value: action.fieldData.getIn(['views', field, 'value'], ''), isValid: action.fieldData.getIn(['views', field, 'isValid'], true), validationMessage: '', checked: action.fieldData.getIn(['views', field, 'checked'], false) };
+          }
         });
-
         return state
             .set('formValues', fromJS(updatedFormValues))
             .set('isValid', initialState.isValid);

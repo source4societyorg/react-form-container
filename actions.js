@@ -24,13 +24,14 @@ export function changeField(id, property, value, checked, target) {
   };
 }
 
-export function submitForm(formValues, validation, id, callbackAction) {
+export function submitForm(formValues, validation, id, callbackAction, fieldData) {
   return {
     type: SUBMIT_FORM,
     formValues,
     validation,
     id,
-    callbackAction
+    callbackAction,
+    fieldData,
   };
 }
 
