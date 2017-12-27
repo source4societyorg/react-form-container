@@ -16,19 +16,35 @@ import {
     makeSelectFormValues,
     makeSelectIsValid,
 } from './selectors';
+import { fromJS }  from 'immutable';
 
 export class FormContainer extends React.PureComponent { // eslint-disable-line react/prefer-stateless-function
 
   componentDidMount() {
-    if(typeof this.props.fieldData !== 'undefined') {    
+    if (typeof this.props.fieldData !== 'undefined' && this.props.id !== '') {   
       this.props.initializeValues(this.props.id, this.props.fieldData);
     }
   }
 
-  componentWillReceiveProps(nextProps) {    
-    if (typeof nextProps.fieldData !== 'undefined' && !nextProps.fieldData.equals(this.props.fieldData)) {     
-      this.props.initializeValues(this.props.id, nextProps.fieldData);
+  componentWillReceiveProps(nextProps) {   
+    if (typeof nextProps.fieldData !== 'undefined' && !nextProps.fieldData.equals(this.props.fieldData) && nextProps.id !== '') {    
+      this.props.initializeValues(nextProps.id, nextProps.fieldData);
     }
+  }
+
+  prepareOptions(field) {
+    let options = [];
+    if (typeof field.get('options') !== 'undefined') {
+      return field.get('options')
+    } else if (typeof field.get('enum_titles') !== 'undefined') {
+      field.get('enum_titles').map((titles, index) => {
+        options.push({value: field.get('enum').get(index), label: titles});
+      });
+      return fromJS(options);
+    } else {
+      return ImmutableMap({})
+    }
+    field[1].get('options', ImmutableMap({}))
   }
 
   renderFields() {
@@ -50,7 +66,7 @@ export class FormContainer extends React.PureComponent { // eslint-disable-line 
                 isValid={this.props.formValues.getIn([this.props.id, field[0], 'isValid'])}
                 validationMessage={this.props.formValues.getIn([this.props. id, field[0], 'validationMessage'])}
                 layout={field[1].get('layout', 'vertical')}
-                options={field[1].get('options', ImmutableMap({}))}
+                options={this.prepareOptions(field[1])}
                 hideLabel={field[1].get('hideLabel', false)}
                 checked={this.props.formValues.getIn([this.props.id, field[0], 'checked'], field[1].get('checked', false))}
                 text={field[1].get('text')}
