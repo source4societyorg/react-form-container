@@ -92,7 +92,7 @@ export class FormContainer extends React.PureComponent { // eslint-disable-line 
 
   render() {
     return (
-      <Form id={this.props.id} onSubmit={(evt) => this.props.onSubmit(evt, this.props.formValues, this.props.id, this.props.callbackAction, this.props.fieldData)}>
+      <Form id={this.props.id} onSubmit={(evt) => this.props.onSubmit(evt, this.props.formValues, this.props.id, this.props.callbackAction, this.props.fieldData)} formLayout={this.props.formLayout}>
         {this.renderFields()}
         {this.renderSubmit()}
         {this.props.children}
