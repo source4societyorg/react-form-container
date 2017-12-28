@@ -70,6 +70,7 @@ export class FormContainer extends React.PureComponent { // eslint-disable-line 
                 hideLabel={field[1].get('hideLabel', false)}
                 checked={this.props.formValues.getIn([this.props.id, field[0], 'checked'], field[1].get('checked', false))}
                 text={field[1].get('text')}
+                formLayout={this.props.formLayout}
               >
                   {field[1].get('children', null)}
               </Field>     
@@ -120,6 +121,7 @@ FormContainer.defaultProps = {
   submitLabel: null,
   labels: [],
   validation: [],
+  formLayout: 'vertical',
 };
 
 export const mapDispatchToProps = (dispatch, ownProps) => ({
