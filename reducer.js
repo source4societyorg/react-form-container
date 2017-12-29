@@ -5,6 +5,7 @@ import {
   CHANGE_FIELD,
   SUBMITTED_FORM,
   SUBMIT_FORM,
+  VALIDATION_ERRORS,
 } from './constants';
 
 const initialState = fromJS({
@@ -31,6 +32,26 @@ function formReducer(state = initialState, action) {
             .set('isValid', initialState.isValid);
       }
       return state;
+    case VALIDATION_ERRORS:
+      updatedFormValues = action.formValues;
+      if(typeof action.errors !== 'undefined') {
+        for( let field in action.errors ) {
+          if(typeof action.errors[field] === 'object' && typeof action.errors[field].errors !== 'undefined') {
+            let invalidMessage = '';
+            for( let i = 0; i < action.errors[field].errors.length; i++) {
+              invalidMessage += action.errors[field].errors[i] + ' ';
+            }
+            if(invalidMessage.length > 0 && typeof updatedFormValues[action.formTitle][field] !== 'undefined') {
+              updatedFormValues[action.formTitle][field].isValid = false;
+              updatedFormValues[action.formTitle][field].validationMessage = invalidMessage;
+            }
+          }
+        }
+      }
+     
+      return state
+        .set('isValid', false)
+        .set('formValues', fromJS(updatedFormValues))
     case SUBMIT_FORM:
       return state
         .set('submitDisabled', true)

@@ -2,7 +2,8 @@ import {
     FORM_INITIALIZED,
     CHANGE_FIELD,
     SUBMIT_FORM,
-    SUBMITTED_FORM
+    SUBMITTED_FORM,
+    VALIDATION_ERRORS,
 } from './constants';
 
 export function initializeValues(id, fieldData) {
@@ -41,4 +42,13 @@ export function formSubmitted(isValid, formValues) {
     formValues,
     isValid
   };
+}
+
+export function setValidationErrors(errors, formTitle, formValues) {
+  return {
+    type: VALIDATION_ERRORS,
+    errors,
+    formTitle,
+    formValues,
+  }
 }
