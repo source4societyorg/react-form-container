@@ -4,6 +4,7 @@ import {
     SUBMIT_FORM,
     SUBMITTED_FORM,
     VALIDATION_ERRORS,
+    CLEAR_FORM,
 } from './constants';
 
 export function initializeValues(id, fieldData) {
@@ -52,3 +53,12 @@ export function setValidationErrors(errors, formTitle, formValues) {
     formValues,
   }
 }
+
+export function clearForm(fieldData, formTitle) {
+  return {
+    type: CLEAR_FORM,
+    fieldData,
+    formTitle,
+  }
+}
+

@@ -6,6 +6,7 @@ import {
   SUBMITTED_FORM,
   SUBMIT_FORM,
   VALIDATION_ERRORS,
+  CLEAR_FORM,
 } from './constants';
 
 const initialState = fromJS({
@@ -19,6 +20,7 @@ function formReducer(state = initialState, action) {
 
   switch (action.type) {
     case FORM_INITIALIZED:
+    case CLEAR_FORM:
       if (typeof action.fieldData !== 'undefined') {
         updatedFormValues = {};
         updatedFormValues[action.id] = {};

@@ -71,6 +71,7 @@ export class FormContainer extends React.PureComponent { // eslint-disable-line 
                 checked={this.props.formValues.getIn([this.props.id, field[0], 'checked'], field[1].get('checked', false))}
                 text={field[1].get('text')}
                 formLayout={this.props.formLayout}
+                defaultOption={field[1].get('default_option', undefined)}
               >
                   {field[1].get('children', null)}
               </Field>     
