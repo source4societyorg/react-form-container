@@ -5,6 +5,7 @@ const validators = {
   decimal: (value) => !isNaN(parseFloat(value)) && isFinite(value),
   nonegative: (value) => parseInt(value) >= 0,
   website: (value) => /^(http|https):\/\/[^ "]+$/.test(value),
+  pdf: (value) => /\.pdf$/.test(value)
 };
 
 export default validators;
