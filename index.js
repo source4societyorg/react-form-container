@@ -72,6 +72,7 @@ export class FormContainer extends React.PureComponent { // eslint-disable-line 
                 text={field[1].get('text')}
                 formLayout={this.props.formLayout}
                 defaultOption={field[1].get('default_option', undefined)}
+                moreProps={this.props}
               >
                   {field[1].get('children', null)}
               </Field>     

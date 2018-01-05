@@ -21,12 +21,12 @@ function formReducer(state = initialState, action) {
   switch (action.type) {
     case FORM_INITIALIZED:
     case CLEAR_FORM:
-      if (typeof action.fieldData !== 'undefined') {
+      if (typeof action.fieldData !== 'undefined') {      
         updatedFormValues = {};
         updatedFormValues[action.id] = {};
         action.fieldData.get('data').keySeq().forEach((field) => {    
           if (action.fieldData.getIn(['data', field, 'widget'], 'text') !== 'divider') { 
-            updatedFormValues[action.id][field] = { value: action.fieldData.getIn(['views', field, 'value'], ''), isValid: action.fieldData.getIn(['views', field, 'isValid'], true), validationMessage: '', checked: action.fieldData.getIn(['views', field, 'checked'], false) };
+            updatedFormValues[action.id][field] = { value: action.fieldData.getIn(['views', field, 'value'], ''), isValid: action.fieldData.getIn(['views', field, 'isValid'], true), validationMessage: '', checked: action.fieldData.getIn(['views', field, 'checked'], false), data: action.fieldData.getIn(['views', field, 'data']) }
           }
         });
         return state
@@ -59,7 +59,7 @@ function formReducer(state = initialState, action) {
         .set('submitDisabled', true)
     case CHANGE_FIELD:
       return state
-        .setIn(['formValues', action.id, action.property], ImmutableMap({ value: action.value, isValid: true, validationMessage: '', checked: action.checked }))
+        .setIn(['formValues', action.id, action.property], ImmutableMap({ value: action.value, isValid: true, validationMessage: '', checked: action.checked, data: action.target }))
         .set('isValid', initialState.isValid);
     case SUBMITTED_FORM:
       return state

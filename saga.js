@@ -22,7 +22,7 @@ export function* validateFormData(action) {
             isValid = false;
             areAllValidatorsValid = false
           }
-          clonedFormValues = clonedFormValues.setIn([action.id, field], ImmutableMap({ value, isValid: areAllValidatorsValid, validationMessage }));
+          clonedFormValues = clonedFormValues.setIn([action.id, field], ImmutableMap({ value, isValid: areAllValidatorsValid, validationMessage }));          
         } 
       }             
     }
