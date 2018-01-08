@@ -115,6 +115,7 @@ FormContainer.propTypes = {
   onSubmit: PropTypes.func,
   callbackAction: PropTypes.func,
   submitDisabled: PropTypes.bool,
+  formIdentifier: PropTypes.string,
 };
 
 FormContainer.defaultProps = {
@@ -124,6 +125,7 @@ FormContainer.defaultProps = {
   labels: [],
   validation: [],
   formLayout: 'vertical',
+  reducerKey: 'form',
 };
 
 export const mapDispatchToProps = (dispatch, ownProps) => ({
@@ -132,11 +134,13 @@ export const mapDispatchToProps = (dispatch, ownProps) => ({
   onSubmit: (evt, formValues, id, callbackAction, fieldData) => { evt.preventDefault(); return dispatch(submitForm(formValues, ownProps.validation, id, callbackAction, fieldData)); },
 });
 
-const mapStateToProps = createStructuredSelector({
-  formValues: makeSelectFormValues(),
-  isValid: makeSelectIsValid(),
-  submitDisabled: makeSelectSubmitDisabled(),
-});
+const mapStateToProps = (state, ownProps) => (
+  createStructuredSelector({
+    formValues: makeSelectFormValues(ownProps.reducerKey),
+    isValid: makeSelectIsValid(ownProps.reducerKey),
+    submitDisabled: makeSelectSubmitDisabled(ownProps.reducerKey),
+  })
+)
 
 const withReducer = injectReducer({ key: 'form', reducer });
 const withSaga = injectSaga({ key: 'form', saga });

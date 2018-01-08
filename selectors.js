@@ -4,20 +4,20 @@
 
 import { createSelector } from 'reselect';
 
-const selectForm = (state) => state.get('form');
+const selectForm = (key = 'form') => (state) => state.get(key)
 
-const makeSelectFormValues = () => createSelector(
-  selectForm,
+const makeSelectFormValues = (formIdentifier) => createSelector(
+  selectForm(formIdentifier),
   (formState) => formState.get('formValues')
 );
 
-const makeSelectIsValid = () => createSelector(
-  selectForm,
+const makeSelectIsValid = (formIdentifier) => createSelector(
+  selectForm(formIdentifier),
   (formState) => formState.get('isValid')
 );
 
-const makeSelectSubmitDisabled = () => createSelector(
-  selectForm,
+const makeSelectSubmitDisabled = (formIdentifier) => createSelector(
+  selectForm(formIdentifier),
   (formState) => formState.get('submitDisabled')
 );
 

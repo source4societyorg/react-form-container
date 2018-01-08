@@ -15,7 +15,7 @@ const initialState = fromJS({
   submitDisabled: false,
 });
 
-function formReducer(state = initialState, action) {
+const formReducer = (state = initialState, action) => {
   let updatedFormValues = null;
 
   switch (action.type) {
