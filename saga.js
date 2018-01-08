@@ -1,7 +1,7 @@
 import { call, put, takeLatest } from 'redux-saga/effects';
 import { SUBMIT_FORM, SUBMITTED_FORM } from './constants';
 import { formSubmitted } from './actions';
-import validators from './validators';
+import validators from './validators/validators';
 import { fromJS, Map as ImmutableMap } from 'immutable';
 
 
