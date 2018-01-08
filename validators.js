@@ -6,7 +6,8 @@ const validators = {
   nonegative: (value) => parseInt(value) >= 0,
   website: (value) => /^(http|https):\/\/[^ "]+$/.test(value),
   pdf: (value) => /\.pdf$/.test(value),
-  matchField: (value, value2) => value === value2
+  matchField: (value, value2) => value === value2,
+  phone: (value) => /^(\+\d{1,2}\s)?\(?\d{3}\)?[\s.-]?\d{3}[\s.-]?\d{4}$/.test(value)
 };
 
 export default validators;
