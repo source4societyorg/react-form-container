@@ -15,12 +15,16 @@ const initialState = fromJS({
   submitDisabled: false,
 });
 
-const formReducer = (state = initialState, action) => {
-  let updatedFormValues = null;
+const formReducer = (reducerKey) => (state = initialState, action, props) => {
+  let updatedFormValues = null; 
 
   switch (action.type) {
     case FORM_INITIALIZED:
     case CLEAR_FORM:
+      if (reducerKey !== action.reducerKey && action.type)  {
+        return state
+      }
+
       if (typeof action.fieldData !== 'undefined') {      
         updatedFormValues = {};
         updatedFormValues[action.id] = {};
@@ -35,6 +39,10 @@ const formReducer = (state = initialState, action) => {
       }
       return state;
     case VALIDATION_ERRORS:
+      if (reducerKey !== action.reducerKey && action.type)  {
+        return state
+      }
+
       updatedFormValues = action.formValues;
       if(typeof action.errors !== 'undefined') {
         for( let field in action.errors ) {
@@ -55,13 +63,26 @@ const formReducer = (state = initialState, action) => {
         .set('isValid', false)
         .set('formValues', fromJS(updatedFormValues))
     case SUBMIT_FORM:
+      if (reducerKey !== action.reducerKey && action.type)  {
+        return state
+      }
+
       return state
+        .set('forceSubmit', false)
         .set('submitDisabled', true)
     case CHANGE_FIELD:
+      if (reducerKey !== action.reducerKey && action.type)  {
+        return state
+      }
+
       return state
         .setIn(['formValues', action.id, action.property], ImmutableMap({ value: action.value, isValid: true, validationMessage: '', checked: action.checked, data: action.target }))
         .set('isValid', initialState.isValid);
     case SUBMITTED_FORM:
+      if (reducerKey !== action.reducerKey && action.type)  {
+        return state
+      }
+
       return state
         .set('formValues', action.formValues)
         .set('isValid', action.isValid)

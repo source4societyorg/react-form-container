@@ -7,15 +7,16 @@ import {
     CLEAR_FORM,
 } from './constants';
 
-export function initializeValues(id, fieldData) {
+export function initializeValues(id, fieldData, reducerKey = 'form') {
   return {
     type: FORM_INITIALIZED,
     id,
     fieldData,
+    reducerKey,
   };
 }
 
-export function changeField(id, property, value, checked, target) {
+export function changeField(id, property, value, checked, target, reducerKey = 'form') {
   return {
     type: CHANGE_FIELD,
     id,
@@ -23,10 +24,11 @@ export function changeField(id, property, value, checked, target) {
     value,
     checked,
     target,
+    reducerKey,
   };
 }
 
-export function submitForm(formValues, validation, id, callbackAction, fieldData) {
+export function submitForm(formValues, validation, id, callbackAction, fieldData, reducerKey = 'form') {  
   return {
     type: SUBMIT_FORM,
     formValues,
@@ -34,31 +36,35 @@ export function submitForm(formValues, validation, id, callbackAction, fieldData
     id,
     callbackAction,
     fieldData,
+    reducerKey,
   };
 }
 
-export function formSubmitted(isValid, formValues) {
+export function formSubmitted(isValid, formValues, reducerKey = 'form') {
   return {
     type: SUBMITTED_FORM,
     formValues,
-    isValid
+    isValid,
+    reducerKey,
   };
 }
 
-export function setValidationErrors(errors, formTitle, formValues) {
+export function setValidationErrors(errors, formTitle, formValues, reducerKey = 'form') {
   return {
     type: VALIDATION_ERRORS,
     errors,
     formTitle,
     formValues,
+    reducerKey,
   }
 }
 
-export function clearForm(fieldData, formTitle) {
+export function clearForm(fieldData, formTitle, reducerKey = 'form') {
   return {
     type: CLEAR_FORM,
     fieldData,
     formTitle,
+    reducerKey
   }
 }
 

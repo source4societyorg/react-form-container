@@ -22,13 +22,19 @@ export class FormContainer extends React.PureComponent { // eslint-disable-line 
 
   componentDidMount() {
     if (typeof this.props.fieldData !== 'undefined' && this.props.id !== '') {   
-      this.props.initializeValues(this.props.id, this.props.fieldData);
+      this.props.initializeValues(this.props.id, this.props.fieldData, this.props.reducerKey);
     }
   }
 
   componentWillReceiveProps(nextProps) {   
     if (typeof nextProps.fieldData !== 'undefined' && !nextProps.fieldData.equals(this.props.fieldData) && nextProps.id !== '') {    
-      this.props.initializeValues(nextProps.id, nextProps.fieldData);
+      this.props.initializeValues(nextProps.id, nextProps.fieldData, nextProps.reducerKey);
+    }
+
+    if (nextProps.forceSubmit === true && nextProps.forceSubmit !== this.props.forceSubmit) {
+      if (!nextProps.submitDisabled) {
+        this.props.onSubmit(new Event('submit form'), nextProps.formValues, nextProps.id, nextProps.callbackAction, nextProps.fieldData, nextProps.reducerKey);
+      }
     }
   }
 
@@ -61,7 +67,7 @@ export class FormContainer extends React.PureComponent { // eslint-disable-line 
                 fieldData={field[1]}
                 labelText={index === 0 ? null : this.props.labels[index-1]}
                 fieldType={field[1].get('widget', 'text')}
-                onChange={(evt) => this.props.onChangeFieldValue(evt, field[0])}
+                onChange={(evt) => this.props.onChangeFieldValue(evt, field[0], this.props.reducerKey)}
                 value={this.props.formValues.getIn([this.props.id, field[0], 'value'], '')}
                 isValid={this.props.formValues.getIn([this.props.id, field[0], 'isValid'])}
                 validationMessage={this.props.formValues.getIn([this.props. id, field[0], 'validationMessage'])}
@@ -86,7 +92,7 @@ export class FormContainer extends React.PureComponent { // eslint-disable-line 
 
   renderSubmit() {
     if (typeof this.props.submitLabel !== 'undefined') {
-      return <button className={'submit ' + (this.props.submitDisabled ? 'disabled' : '')} disabled={this.props.submitDisabled} onClick={(evt) => this.props.onSubmit(evt, this.props.formValues, this.props.id, this.props.callbackAction, this.props.fieldData)}>{this.props.submitLabel}</button>;
+      return <button className={'submit ' + (this.props.submitDisabled ? 'disabled' : '')} disabled={this.props.submitDisabled} onClick={(evt) => this.props.onSubmit(evt, this.props.formValues, this.props.id, this.props.callbackAction, this.props.fieldData, this.props.reducerKey)}>{this.props.submitLabel}</button>;
     }
 
     return null;
@@ -115,23 +121,24 @@ FormContainer.propTypes = {
   onSubmit: PropTypes.func,
   callbackAction: PropTypes.func,
   submitDisabled: PropTypes.bool,
-  formIdentifier: PropTypes.string,
+  reducerKey: PropTypes.string,
 };
 
 FormContainer.defaultProps = {
   id: '',
   endpoint: '',
-  submitLabel: null,
+  submitLabel: undefined,
   labels: [],
   validation: [],
   formLayout: 'vertical',
+  forceSubmit: false,
   reducerKey: 'form',
 };
 
 export const mapDispatchToProps = (dispatch, ownProps) => ({
-  initializeValues: (id, fieldData) => dispatch(initializeValues(id, fieldData)),
-  onChangeFieldValue: (evt, field) => dispatch(changeField(ownProps.id, field, evt.target.value, evt.target.checked, evt.target)),
-  onSubmit: (evt, formValues, id, callbackAction, fieldData) => { evt.preventDefault(); return dispatch(submitForm(formValues, ownProps.validation, id, callbackAction, fieldData)); },
+  initializeValues: (id, fieldData, reducerKey) => dispatch(initializeValues(id, fieldData, reducerKey)),
+  onChangeFieldValue: (evt, field, reducerKey) => dispatch(changeField(ownProps.id, field, evt.target.value, evt.target.checked, evt.target, reducerKey)),
+  onSubmit: (evt, formValues, id, callbackAction, fieldData, reducerKey) => { evt.preventDefault(); return dispatch(submitForm(formValues, ownProps.validation, id, callbackAction, fieldData, reducerKey)); },
 });
 
 const mapStateToProps = (state, ownProps) => (
@@ -142,7 +149,7 @@ const mapStateToProps = (state, ownProps) => (
   })
 )
 
-const withReducer = injectReducer({ key: 'form', reducer });
+const withReducer = injectReducer({ key: 'form', reducer, isNamespaced: true });
 const withSaga = injectSaga({ key: 'form', saga });
 const withConnect = connect(mapStateToProps, mapDispatchToProps);
 
