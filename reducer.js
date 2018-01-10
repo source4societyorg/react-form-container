@@ -25,7 +25,7 @@ const formReducer = (reducerKey) => (state = initialState, action, props) => {
         return state
       }
 
-      if (typeof action.fieldData !== 'undefined') {      
+      if (typeof action.fieldData !== 'undefined' && typeof action.fieldData.get('data') !== 'undefined') {      
         updatedFormValues = {};
         updatedFormValues[action.id] = {};
         action.fieldData.get('data').keySeq().forEach((field) => {    
