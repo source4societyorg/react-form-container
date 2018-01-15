@@ -33,6 +33,8 @@ const formReducer = (reducerKey) => (state = initialState, action, props) => {
             updatedFormValues[action.id][field] = { value: action.fieldData.getIn(['views', field, 'value'], ''), isValid: action.fieldData.getIn(['views', field, 'isValid'], true), validationMessage: '', checked: action.fieldData.getIn(['views', field, 'checked'], false), data: action.fieldData.getIn(['views', field, 'data']) }
           }
         });
+
+        console.log(updatedFormValues)
         return state
             .set('formValues', fromJS(updatedFormValues))
             .set('isValid', initialState.isValid);
