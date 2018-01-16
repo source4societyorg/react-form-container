@@ -34,7 +34,6 @@ const formReducer = (reducerKey) => (state = initialState, action, props) => {
           }
         });
 
-        console.log(updatedFormValues)
         return state
             .set('formValues', fromJS(updatedFormValues))
             .set('isValid', initialState.isValid);
