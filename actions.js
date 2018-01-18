@@ -5,6 +5,7 @@ import {
     SUBMITTED_FORM,
     VALIDATION_ERRORS,
     CLEAR_FORM,
+    FETCHED_FORM_DATA,
 } from './constants';
 
 export function initializeValues(id, fieldData, reducerKey = 'form') {
@@ -68,3 +69,12 @@ export function clearForm(fieldData, formTitle, reducerKey = 'form') {
   }
 }
 
+export function fetchedFormData(formData, reducerKey, fieldData, id) {
+  return {
+    type: FETCHED_FORM_DATA,
+    formData,
+    reducerKey,
+    fieldData,
+    id,
+  }
+}
