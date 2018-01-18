@@ -22,6 +22,26 @@ const formReducer = (reducerKey) => (state = initialState, action, props) => {
   let updatedFormValues = null; 
 
   switch (action.type) {
+    case FORM_INITIALIZED:
+    case CLEAR_FORM:
+      if (reducerKey !== action.reducerKey && action.type)  {
+        return state
+      }
+
+      if (typeof action.fieldData !== 'undefined' && typeof action.fieldData.get('data') !== 'undefined') {      
+        updatedFormValues = {};
+        updatedFormValues[action.id] = {};
+        action.fieldData.get('data').keySeq().forEach((field) => {    
+          if (action.fieldData.getIn(['data', field, 'widget'], 'text') !== 'divider') { 
+            updatedFormValues[action.id][field] = { value: action.fieldData.getIn(['views', field, 'value'], ''), isValid: action.fieldData.getIn(['views', field, 'isValid'], true), validationMessage: '', checked: action.fieldData.getIn(['views', field, 'checked'], false), data: action.fieldData.getIn(['views', field, 'data']) }
+          }
+        });
+
+        return state
+            .set('formValues', fromJS(updatedFormValues))
+            .set('isValid', initialState.isValid);
+      }
+      return state;
     case VALIDATION_ERRORS:
       if (reducerKey !== action.reducerKey && action.type)  {
         return state

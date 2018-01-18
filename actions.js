@@ -60,11 +60,11 @@ export function setValidationErrors(errors, formTitle, formValues, reducerKey = 
   }
 }
 
-export function clearForm(fieldData, formTitle, reducerKey = 'form') {
+export function clearForm(fieldData, id, reducerKey = 'form') {
   return {
     type: CLEAR_FORM,
     fieldData,
-    formTitle,
+    id,
     reducerKey
   }
 }
