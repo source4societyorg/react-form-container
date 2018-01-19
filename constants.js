@@ -20,7 +20,6 @@ export const setFieldDataValues = (formData, fieldData) => {
     }
   }
 
-  console.log(updatedFieldData)
   return fieldData;
 }
 
