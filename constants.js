@@ -15,11 +15,11 @@ export const setFieldDataValues = (formData, fieldData) => {
   for ( let field of fieldData.get('data') ) {
     let valueData = formData[field[0]];
     if (!utilities.isEmpty(valueData)) {
-      let checkedData = field[1].get('widget', 'text') === 'checkbox' ? formData[key] : (!utilities.isEmpty(fieldData.get('views')) && !utilities.isEmpty(fieldData.getIn(['views',field[0]])) ? fieldData.getIn(['views',field[0], 'value']) || false : false );
+      let checkedData = field[1].get('widget', 'text') === 'checkbox' ? formData[field[0]] : (!utilities.isEmpty(fieldData.get('views')) && !utilities.isEmpty(fieldData.getIn(['views',field[0]])) ? fieldData.getIn(['views',field[0], 'value']) || false : false );
       updatedFieldData = updatedFieldData.setIn(['views',field[0]], ImmutableMap({ value: valueData, isValid: true, checked: checkedData }));
     }
   }
 
-  return fieldData;
+  return updatedFieldData;
 }
 

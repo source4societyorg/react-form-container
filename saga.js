@@ -9,6 +9,7 @@ import { fromJS, Map as ImmutableMap } from 'immutable';
 export const validateFormData = (reducerKey) => (function* validateFormDataFunction(action) { 
   let clonedFormValues = action.formValues;
   let isValid = true; 
+
   if(action.reducerKey !== reducerKey) {
     return
   }
