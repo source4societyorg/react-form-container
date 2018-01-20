@@ -3,8 +3,7 @@ import { SUBMIT_FORM, SUBMITTED_FORM } from './constants';
 import { formSubmitted } from './actions';
 import validators from './validators/validators';
 import { fromJS, Map as ImmutableMap } from 'immutable';
-
-
+import utilities from '@source4society/scepter-utility-lib';
 
 export const validateFormData = (reducerKey) => (function* validateFormDataFunction(action) { 
   let clonedFormValues = action.formValues;
@@ -24,11 +23,17 @@ export const validateFormData = (reducerKey) => (function* validateFormDataFunct
         for (let configIndex = 0; configIndex < validatorConfig.length; configIndex += 1) {
           const value = clonedFormValues.getIn([action.id, field, 'value'], '');
           let value2;
-          if(validatorConfig[configIndex].validationType === 'matchField') {
-            value2 = clonedFormValues.getIn([action.id, validatorConfig[configIndex].fieldName, 'value'], '')
-          } 
-          const isFieldValid = validators[validatorConfig[configIndex].validationType](value, value2);
-          validationMessage += isFieldValid ? '' : `${validatorConfig[configIndex].invalidMessage}. `;
+          let isFieldValid = true
+          if(validatorConfig[configIndex].ifNotEmpty && !utilities.isEmpty(value) || utilities.isEmpty(validatorConfig[configIndex].ifNotEmpty)) {
+            if(validatorConfig[configIndex].validationType === 'matchField') {
+              value2 = clonedFormValues.getIn([action.id, validatorConfig[configIndex].fieldName, 'value'], '')
+            } else {
+              value2 = validatorConfig[configIndex].parameter
+            } 
+            isFieldValid = validators[validatorConfig[configIndex].validationType](value, value2);
+            validationMessage += isFieldValid ? '' : `${validatorConfig[configIndex].invalidMessage}. `;
+          }
+
           if (!isFieldValid) {
             isValid = false;
             areAllValidatorsValid = false
