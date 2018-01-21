@@ -8,7 +8,7 @@ import injectReducer from 'utils/injectReducer';
 import injectSaga from 'utils/injectSaga';
 import reducer from './reducer';
 import saga from './saga';
-import { initializeValues, changeField, submitForm } from './actions';
+import { initializeValues, changeField, submitForm, blurField, focusField } from './actions';
 import Form from '../../components/Form';
 import Field from '../../components/Form/Field';
 import {
@@ -80,6 +80,8 @@ export class FormContainer extends React.PureComponent { // eslint-disable-line 
                 defaultOption={field[1].get('default_option', undefined)}
                 moreProps={this.props}
                 utcOffset={field[1].get('utcOffset', global.utcOffset)}
+                onBlur={(evt) => this.props.onBlur(evt, this.props.id, this.props.reducerKey, field[0], this.props.formValues)}
+                onFocus={(evt) => this.props.onFocus(evt, this.props.id, this.props.reducerKey, field[0], this.props.formValues)}
               >
                   {field[1].get('children', null)}
               </Field>     
@@ -140,6 +142,8 @@ export const mapDispatchToProps = (dispatch, ownProps) => ({
   initializeValues: (id, fieldData, reducerKey) => dispatch(initializeValues(id, fieldData, reducerKey)),
   onChangeFieldValue: (evt, field, reducerKey) => dispatch(changeField(ownProps.id, field, evt.target.value, evt.target.checked, evt.target, reducerKey)),
   onSubmit: (evt, formValues, id, callbackAction, fieldData, reducerKey) => { evt.preventDefault(); return dispatch(submitForm(formValues, ownProps.validation, id, callbackAction, fieldData, reducerKey)); },
+  onBlur: (evt, formTitle, reducerKey, property, formValues) => dispatch(blurField(evt, formTitle, reducerKey, property, formValues)),
+  onFocus: (evt, formTitle, reducerKey, property, formValues) => dispatch(focusField(evt, formTitle, reducerKey, property, formValues))
 });
 
 const mapStateToProps = (state, ownProps) => (

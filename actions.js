@@ -6,6 +6,8 @@ import {
     VALIDATION_ERRORS,
     CLEAR_FORM,
     FETCHED_FORM_DATA,
+    BLUR_FIELD,
+    FOCUS_FIELD,
 } from './constants';
 
 export function initializeValues(id, fieldData, reducerKey = 'form') {
@@ -76,5 +78,27 @@ export function fetchedFormData(formData, reducerKey, fieldData, id) {
     reducerKey,
     fieldData,
     id,
+  }
+}
+
+export function blurField(event, formTitle, reducerKey, property, formValues) {
+  return {
+    type: BLUR_FIELD,
+    event,
+    formTitle,
+    reducerKey,
+    property,
+    formValues,
+  }
+}
+
+export function focusField(event, formTitle, reducerKey, property, formValues) {
+  return {
+    type: FOCUS_FIELD,
+    event,
+    formTitle,
+    reducerKey,
+    property,
+    formValues,
   }
 }
