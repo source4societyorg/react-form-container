@@ -10,6 +10,8 @@ You can optionally include the presentational components located at [source4soci
 Please be sure you have the following in your package.json:
 
     "dependencies": {
+      "@source4society/scepter-utility-lib": "0.0.20",
+      "@source4society/scepter-reducer-lib": "0.0.2",
       "babel-polyfill": "6.23.0",
       "immutable": "3.8.1",
       "intl": "1.2.5",

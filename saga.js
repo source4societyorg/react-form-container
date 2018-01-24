@@ -54,3 +54,4 @@ export default function* validateData(props) {
   yield takeLatest(SUBMIT_FORM, validateFormData(props.reducerKey || 'form'));
 }
 
+

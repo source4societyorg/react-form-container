@@ -1,5 +1,6 @@
 import { fromJS, Map as ImmutableMap } from 'immutable';
 import utilities from '@source4society/scepter-utility-lib';
+import { namespacedReducerHandler } from '@source4society/scepter-reducer-lib';
 
 import {
   FORM_INITIALIZED,
@@ -18,101 +19,91 @@ const initialState = fromJS({
 });
 
 
-const formReducer = (reducerKey) => (state = initialState, action, props) => {
-  let updatedFormValues = null; 
+const initializeFormReducer = (state = initialState, action, reducerKey) => {
+  return namespacedReducerHandler(state, action, reducerKey, (state, action, reducerKey) => {    
+    if (utilities.notEmptyAt(action.fieldData, ['data'], false)) {      
+      updatedFormValues = {};
+      updatedFormValues[action.id] = {};
+      action.fieldData.get('data').keySeq().forEach((field) => {    
+        if (action.fieldData.getIn(['data', field, 'widget'], 'text') !== 'divider') { 
+          updatedFormValues[action.id][field] = { value: action.fieldData.getIn(['views', field, 'value'], ''), isValid: action.fieldData.getIn(['views', field, 'isValid'], true), validationMessage: '', checked: action.fieldData.getIn(['views', field, 'checked'], false), data: action.fieldData.getIn(['views', field, 'data']) }
+        }
+      });
 
-  switch (action.type) {
-    case FORM_INITIALIZED:
-    case CLEAR_FORM:
-      if (reducerKey !== action.reducerKey && action.type)  {
-        return state
-      }
+      return state
+        .set('formValues', fromJS(updatedFormValues))
+        .set('isValid', initialState.isValid);
+    }
+    return state;
+  })
+}
 
-      if (typeof action.fieldData !== 'undefined' && typeof action.fieldData.get('data') !== 'undefined') {      
-        updatedFormValues = {};
-        updatedFormValues[action.id] = {};
-        action.fieldData.get('data').keySeq().forEach((field) => {    
-          if (action.fieldData.getIn(['data', field, 'widget'], 'text') !== 'divider') { 
-            updatedFormValues[action.id][field] = { value: action.fieldData.getIn(['views', field, 'value'], ''), isValid: action.fieldData.getIn(['views', field, 'isValid'], true), validationMessage: '', checked: action.fieldData.getIn(['views', field, 'checked'], false), data: action.fieldData.getIn(['views', field, 'data']) }
+const validationErrorsReducer = (state = initialState, action, reducerKey) => {
+  return namespacedReducerHandler(state, action, reducerKey, (state, action, reducerKey) => {    
+    updatedFormValues = action.formValues;
+    if(utilities.isNotEmpty(action.errors)) {
+      for( let field in action.errors ) {
+        if(utilities.notEmptyIn(action.errors, [field, 'errors'])) {
+          let invalidMessage = '';
+          for( let i = 0; i < action.errors[field].errors.length; i++) {
+            invalidMessage += action.errors[field].errors[i] + ' ';
           }
-        });
-
-        return state
-            .set('formValues', fromJS(updatedFormValues))
-            .set('isValid', initialState.isValid);
-      }
-      return state;
-    case VALIDATION_ERRORS:
-      if (reducerKey !== action.reducerKey && action.type)  {
-        return state
-      }
-
-      updatedFormValues = action.formValues;
-      if(typeof action.errors !== 'undefined') {
-        for( let field in action.errors ) {
-          if(typeof action.errors[field] === 'object' && typeof action.errors[field].errors !== 'undefined') {
-            let invalidMessage = '';
-            for( let i = 0; i < action.errors[field].errors.length; i++) {
-              invalidMessage += action.errors[field].errors[i] + ' ';
-            }
-            if(invalidMessage.length > 0 && typeof updatedFormValues[action.formTitle][field] !== 'undefined') {
-              updatedFormValues[action.formTitle][field].isValid = false;
-              updatedFormValues[action.formTitle][field].validationMessage = invalidMessage;
-            }
+          if(invalidMessage.length > 0 && typeof updatedFormValues[action.formTitle][field] !== 'undefined') {
+            updatedFormValues[action.formTitle][field].isValid = false;
+            updatedFormValues[action.formTitle][field].validationMessage = invalidMessage;
           }
         }
       }
-     
-      return state
-        .set('isValid', false)
-        .set('formValues', fromJS(updatedFormValues))
-    case SUBMIT_FORM:
-      if (reducerKey !== action.reducerKey && action.type)  {
-        return state
-      }
+    }
+   
+    return state
+      .set('isValid', false)
+      .set('formValues', fromJS(updatedFormValues))
+  })
+}
 
-      return state
-        .set('forceSubmit', false)
-        .set('submitDisabled', true)
-    case CHANGE_FIELD:
-      if (reducerKey !== action.reducerKey && action.type)  {
-        return state
-      }
+const submitFormReducer = (state = initialState, action, reducerKey) => {
+  return namespacedReducerHandler(state, action, reducerKey, (state, action, reducerKey) => {    
+    return state
+      .set('forceSubmit', false)
+      .set('submitDisabled', true)
+  })
+}
 
-      return state
-        .setIn(['formValues', action.id, action.property], ImmutableMap({ value: action.value, isValid: true, validationMessage: '', checked: action.checked, data: action.target }))
-        .set('isValid', initialState.isValid);
-    case SUBMITTED_FORM:
-      if (reducerKey !== action.reducerKey && action.type)  {
-        return state
-      }
+const changeFieldReducer = (state = initialState, action, reducerKey) => {
+  return namespacedReducerHandler(state, action, reducerKey, (state, action, reducerKey) => {    
+    return state
+      .setIn(
+        ['formValues', action.id, action.property], 
+        ImmutableMap({ value: action.value, isValid: true, validationMessage: '', checked: action.checked, data: action.target })
+      )
+      .set('isValid', initialState.isValid);
+  })
+}
 
-      return state
-        .set('formValues', action.formValues)
-        .set('isValid', action.isValid)
-        .set('submitDisabled', false)
+const submittedFormReducer = (state = initialState, action, reducerKey) => {
+  return namespacedReducerHandler(state, action, reducerKey, (state, action, reducerKey) => {    
+    return state
+      .set('formValues', action.formValues)
+      .set('isValid', action.isValid)
+      .set('submitDisabled', false)
+  })
+}
 
+const formReducer = (reducerKey) => (state = initialState, action) => {
+  let updatedFormValues = null; 
+  switch (action.type) {
     case FORM_INITIALIZED:
     case CLEAR_FORM:
-      if (reducerKey !== action.reducerKey && action.type)  {
-        return state
-      }
-
-      if (typeof action.fieldData !== 'undefined') {      
-        updatedFormValues = {};
-        updatedFormValues[action.id] = {};
-        action.fieldData.get('data').keySeq().forEach((field) => {    
-          if (action.fieldData.getIn(['data', field, 'widget'], 'text') !== 'divider') { 
-            updatedFormValues[action.id][field] = { value: action.fieldData.getIn(['views', field, 'value'], ''), isValid: action.fieldData.getIn(['views', field, 'isValid'], true), validationMessage: '', checked: action.fieldData.getIn(['views', field, 'checked'], false), data: action.fieldData.getIn(['views', field, 'data']) }
-          }
-        });
-
-        return state
-          .set('formValues', fromJS(updatedFormValues))
-          .set('isValid', initialState.isValid);
-      }      
-      return state;
-
+      return initializeFormReducer(state, action, reducerKey)
+    case VALIDATION_ERRORS:
+      return validationErrorsReducer(state, action, reducerKey)
+    case SUBMIT_FORM:
+      return submitFormReducer(state, action, reducerKey)
+    case SUBMITTED_FORM:
+      return submittedFormReducer(state, action, reducerKey)
+    case CHANGE_FIELD:
+      return changeFieldReducer(state, action, reducerKey)
     default:
       return state;
   }

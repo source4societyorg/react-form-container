@@ -10,18 +10,3 @@ export const CLEAR_FORM = 'source4society/react-form-contaner/CLEAR_FORM';
 export const BLUR_FIELD = 'source4society/react-form-contaner/BLUR_FIELD';
 export const FOCUS_FIELD = 'source4society/react-form-contaner/FOCUS_FIELD';
 export const DEFAULT_LOCALE = 'en';
-
-export const setFieldDataValues = (formData, fieldData) => {
-  
-  let updatedFieldData = fieldData
-  for ( let field of fieldData.get('data') ) {
-    let valueData = formData[field[0]];
-    if (!utilities.isEmpty(valueData)) {
-      let checkedData = field[1].get('widget', 'text') === 'checkbox' ? formData[field[0]] : (!utilities.isEmpty(fieldData.get('views')) && !utilities.isEmpty(fieldData.getIn(['views',field[0]])) ? fieldData.getIn(['views',field[0], 'value']) || false : false );
-      updatedFieldData = updatedFieldData.setIn(['views',field[0]], ImmutableMap({ value: valueData, isValid: true, checked: checkedData }));
-    }
-  }
-
-  return updatedFieldData;
-}
-
