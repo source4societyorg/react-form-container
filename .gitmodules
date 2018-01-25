@@ -1,3 +1,0 @@
-[submodule "validators"]
-	path = validators
-	url = git@github.com:source4societyorg/SCEPTER-validation-lib.git
