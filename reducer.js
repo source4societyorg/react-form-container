@@ -20,9 +20,9 @@ const initialState = fromJS({
 
 
 const initializeFormReducer = (state = initialState, action, reducerKey) => {
-  return namespacedReducerHandler(state, action, reducerKey, (state, action, reducerKey) => {    
-    if (utilities.notEmptyAt(action.fieldData, ['data'], false)) {      
-      updatedFormValues = {};
+  return namespacedReducerHandler(state, action, reducerKey, (state, action, reducerKey) => {   
+    let updatedFormValues = {}
+    if (utilities.isNotEmpty(action.fieldData.get('data'))) {    
       updatedFormValues[action.id] = {};
       action.fieldData.get('data').keySeq().forEach((field) => {    
         if (action.fieldData.getIn(['data', field, 'widget'], 'text') !== 'divider') { 

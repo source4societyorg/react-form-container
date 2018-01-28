@@ -2,7 +2,7 @@ import { call, put, takeLatest } from 'redux-saga/effects';
 import { SUBMIT_FORM, SUBMITTED_FORM } from './constants';
 import { formSubmitted } from './actions';
 import validators from '@source4society/scepter-validation-lib';
-import { fromJS, Map as ImmutableMap } from 'immutable';
+import { fromJS, Map as immutableMap } from 'immutable';
 import utilities from '@source4society/scepter-utility-lib';
 
 export const validateFormData = (reducerKey) => (function* validateFormDataFunction(action) { 
@@ -13,7 +13,7 @@ export const validateFormData = (reducerKey) => (function* validateFormDataFunct
     return
   }
 
-  action.formValues.get(action.id, {}).keySeq().forEach((field, fieldIndex) => {
+  action.formValues.get(action.id).keySeq().forEach((field, fieldIndex) => {
     if (action.fieldData.getIn(['data', field, 'widget'], 'text') !== 'divider') {
       let validationMessage = '';
       const propertyOrder = action.fieldData.getIn(['data',field,'propertyOrder'], 0);
@@ -24,7 +24,7 @@ export const validateFormData = (reducerKey) => (function* validateFormDataFunct
           const value = clonedFormValues.getIn([action.id, field, 'value'], '');
           let value2;
           let isFieldValid = true
-          if(validatorConfig[configIndex].ifNotEmpty && !utilities.isEmpty(value) || utilities.isEmpty(validatorConfig[configIndex].ifNotEmpty)) {
+          if((validatorConfig[configIndex].ifNotEmpty && !utilities.isEmpty(value)) || utilities.isEmpty(validatorConfig[configIndex].ifNotEmpty)) {
             if(validatorConfig[configIndex].validationType === 'matchField') {
               value2 = clonedFormValues.getIn([action.id, validatorConfig[configIndex].fieldName, 'value'], '')
             } else {
@@ -38,7 +38,7 @@ export const validateFormData = (reducerKey) => (function* validateFormDataFunct
             isValid = false;
             areAllValidatorsValid = false
           }
-          clonedFormValues = clonedFormValues.setIn([action.id, field], ImmutableMap({ value, isValid: areAllValidatorsValid, validationMessage }));          
+          clonedFormValues = clonedFormValues.setIn([action.id, field], immutableMap({ value, isValid: areAllValidatorsValid, validationMessage }));          
         } 
       }             
     }

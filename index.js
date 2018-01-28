@@ -21,7 +21,7 @@ import { fromJS }  from 'immutable';
 export class FormContainer extends React.PureComponent { // eslint-disable-line react/prefer-stateless-function
 
   componentDidMount() {
-    if (typeof this.props.fieldData !== 'undefined' && this.props.id !== '') {   
+    if (typeof this.props.fieldData !== 'undefined' && this.props.id !== '') {  
       this.props.initializeValues(this.props.id, this.props.fieldData, this.props.reducerKey);
     }
   }
