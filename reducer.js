@@ -18,7 +18,6 @@ const initialState = fromJS({
   submitDisabled: false,
 });
 
-
 const initializeFormReducer = (state = initialState, action, reducerKey) => {
   return namespacedReducerHandler(state, action, reducerKey, (state, action, reducerKey) => {   
     let updatedFormValues = {}
@@ -40,10 +39,10 @@ const initializeFormReducer = (state = initialState, action, reducerKey) => {
 
 const validationErrorsReducer = (state = initialState, action, reducerKey) => {
   return namespacedReducerHandler(state, action, reducerKey, (state, action, reducerKey) => {    
-    updatedFormValues = action.formValues;
+    let updatedFormValues = action.formValues;
     if(utilities.isNotEmpty(action.errors)) {
       for( let field in action.errors ) {
-        if(utilities.notEmptyIn(action.errors, [field, 'errors'])) {
+        if(utilities.notEmptyAt(action.errors, [field, 'errors'])) {
           let invalidMessage = '';
           for( let i = 0; i < action.errors[field].errors.length; i++) {
             invalidMessage += action.errors[field].errors[i] + ' ';
