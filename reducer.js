@@ -1,4 +1,4 @@
-import { fromJS, Map as ImmutableMap } from 'immutable';
+import { fromJS, Map as immutableMap } from 'immutable';
 import utilities from '@source4society/scepter-utility-lib';
 import { namespacedReducerHandler } from '@source4society/scepter-reducer-lib';
 
@@ -71,11 +71,16 @@ const submitFormReducer = (state = initialState, action, reducerKey) => {
 }
 
 const changeFieldReducer = (state = initialState, action, reducerKey) => {
-  return namespacedReducerHandler(state, action, reducerKey, (state, action, reducerKey) => {    
+  return namespacedReducerHandler(state, action, reducerKey, (state, action, reducerKey) => {  
+    let value = action.value
+    if(action.fieldData.get('convert_boolean', false)) {
+      value = utilities.ifTrueElseDefault(action.value === 'true', true, utilities.ifTrueElseDefault(action.value === 'false', false, action.value))
+    } 
+
     return state
       .setIn(
         ['formValues', action.id, action.property], 
-        ImmutableMap({ value: action.value, isValid: true, validationMessage: '', checked: action.checked, data: action.target })
+        immutableMap({ value: value, isValid: true, validationMessage: '', checked: action.checked, data: action.target })
       )
       .set('isValid', initialState.isValid);
   })

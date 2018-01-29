@@ -19,7 +19,7 @@ export function initializeValues(id, fieldData, reducerKey = 'form') {
   };
 }
 
-export function changeField(id, property, value, checked, target, reducerKey = 'form') {
+export function changeField(id, property, value, checked, target, reducerKey = 'form', fieldData) {
   return {
     type: CHANGE_FIELD,
     id,
@@ -28,6 +28,7 @@ export function changeField(id, property, value, checked, target, reducerKey = '
     checked,
     target,
     reducerKey,
+    fieldData,
   };
 }
 
@@ -43,12 +44,13 @@ export function submitForm(formValues, validation, id, callbackAction, fieldData
   };
 }
 
-export function formSubmitted(isValid, formValues, reducerKey = 'form') {
+export function formSubmitted(isValid, formValues, reducerKey = 'form', formTitle) {
   return {
     type: SUBMITTED_FORM,
+    isValid,   
     formValues,
-    isValid,
     reducerKey,
+    formTitle,
   };
 }
 

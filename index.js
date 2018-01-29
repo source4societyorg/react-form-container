@@ -67,7 +67,7 @@ export class FormContainer extends React.PureComponent { // eslint-disable-line 
                 fieldData={field[1]}
                 labelText={index === 0 ? null : this.props.labels[index-1]}
                 fieldType={field[1].get('widget', 'text')}
-                onChange={(evt) => this.props.onChangeFieldValue(evt, field[0], this.props.reducerKey)}
+                onChange={(evt) => this.props.onChangeFieldValue(evt, field[0], this.props.reducerKey, field[1])}
                 value={this.props.formValues.getIn([this.props.id, field[0], 'value'], '')}
                 isValid={this.props.formValues.getIn([this.props.id, field[0], 'isValid'])}
                 validationMessage={this.props.formValues.getIn([this.props. id, field[0], 'validationMessage'])}
@@ -83,7 +83,7 @@ export class FormContainer extends React.PureComponent { // eslint-disable-line 
                 onBlur={(evt) => this.props.onBlur(evt, this.props.id, this.props.reducerKey, field[0], this.props.formValues)}
                 onFocus={(evt) => this.props.onFocus(evt, this.props.id, this.props.reducerKey, field[0], this.props.formValues)}
               >
-                  {field[1].get('children', null)}
+                {field[1].get('children', null)}
               </Field>     
             );
           }
@@ -140,7 +140,7 @@ FormContainer.defaultProps = {
 
 export const mapDispatchToProps = (dispatch, ownProps) => ({
   initializeValues: (id, fieldData, reducerKey) => dispatch(initializeValues(id, fieldData, reducerKey)),
-  onChangeFieldValue: (evt, field, reducerKey) => dispatch(changeField(ownProps.id, field, evt.target.value, evt.target.checked, evt.target, reducerKey)),
+  onChangeFieldValue: (evt, field, reducerKey, fieldData) => dispatch(changeField(ownProps.id, field, evt.target.value, evt.target.checked, evt.target, reducerKey, fieldData)),
   onSubmit: (evt, formValues, id, callbackAction, fieldData, reducerKey) => { evt.preventDefault(); return dispatch(submitForm(formValues, ownProps.validation, id, callbackAction, fieldData, reducerKey)); },
   onBlur: (evt, formTitle, reducerKey, property, formValues) => dispatch(blurField(evt, formTitle, reducerKey, property, formValues)),
   onFocus: (evt, formTitle, reducerKey, property, formValues) => dispatch(focusField(evt, formTitle, reducerKey, property, formValues))
