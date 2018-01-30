@@ -24,7 +24,11 @@ export const validateFormData = (reducerKey) => (function* validateFormDataFunct
           const value = clonedFormValues.getIn([action.id, field, 'value'], '');
           let value2;
           let isFieldValid = true
-          if((validatorConfig[configIndex].ifNotEmpty && !utilities.isEmpty(value)) || utilities.isEmpty(validatorConfig[configIndex].ifNotEmpty)) {
+          if(
+              utilities.isNotEmpty(validatorConfig[configIndex]) && 
+              (utilities.emptyAt(validatorConfig[configIndex], ['ifNotEmpty']) || 
+                (validatorConfig[configIndex].ifNotEmpty && utilities.isNotEmpty(value)))
+          ) {
             if(validatorConfig[configIndex].validationType === 'matchField') {
               value2 = clonedFormValues.getIn([action.id, validatorConfig[configIndex].fieldName, 'value'], '')
             } else {
