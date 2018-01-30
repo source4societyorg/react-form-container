@@ -82,6 +82,8 @@ export class FormContainer extends React.PureComponent { // eslint-disable-line 
                 utcOffset={field[1].get('utcOffset', global.utcOffset)}
                 onBlur={(evt) => this.props.onBlur(evt, this.props.id, this.props.reducerKey, field[0], this.props.formValues)}
                 onFocus={(evt) => this.props.onFocus(evt, this.props.id, this.props.reducerKey, field[0], this.props.formValues)}
+                fieldOverride={this.props.fieldOverride}
+                editMode={this.props.editMode}
               >
                 {field[1].get('children', null)}
               </Field>     
@@ -125,6 +127,7 @@ FormContainer.propTypes = {
   callbackAction: PropTypes.func,
   submitDisabled: PropTypes.bool,
   reducerKey: PropTypes.string,
+  fieldOverride: PropTypes.func,
 };
 
 FormContainer.defaultProps = {
