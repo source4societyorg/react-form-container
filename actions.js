@@ -32,7 +32,7 @@ export function changeField(id, property, value, checked, target, reducerKey = '
   };
 }
 
-export function submitForm(formValues, validation, id, callbackAction, fieldData, reducerKey = 'form') {  
+export function submitForm(formValues, validation, id, callbackAction, fieldData, reducerKey = 'form') {
   return {
     type: SUBMIT_FORM,
     formValues,
@@ -47,7 +47,7 @@ export function submitForm(formValues, validation, id, callbackAction, fieldData
 export function formSubmitted(isValid, formValues, reducerKey = 'form', formTitle) {
   return {
     type: SUBMITTED_FORM,
-    isValid,   
+    isValid,
     formValues,
     reducerKey,
     formTitle,
@@ -61,7 +61,7 @@ export function setValidationErrors(errors, formTitle, formValues, reducerKey = 
     formTitle,
     formValues,
     reducerKey,
-  }
+  };
 }
 
 export function clearForm(fieldData, id, reducerKey = 'form') {
@@ -69,8 +69,8 @@ export function clearForm(fieldData, id, reducerKey = 'form') {
     type: CLEAR_FORM,
     fieldData,
     id,
-    reducerKey
-  }
+    reducerKey,
+  };
 }
 
 export function fetchedFormData(formData, reducerKey, fieldData, id) {
@@ -80,7 +80,7 @@ export function fetchedFormData(formData, reducerKey, fieldData, id) {
     reducerKey,
     fieldData,
     id,
-  }
+  };
 }
 
 export function blurField(event, formTitle, reducerKey, property, formValues) {
@@ -91,7 +91,7 @@ export function blurField(event, formTitle, reducerKey, property, formValues) {
     reducerKey,
     property,
     formValues,
-  }
+  };
 }
 
 export function focusField(event, formTitle, reducerKey, property, formValues) {
@@ -102,5 +102,5 @@ export function focusField(event, formTitle, reducerKey, property, formValues) {
     reducerKey,
     property,
     formValues,
-  }
+  };
 }

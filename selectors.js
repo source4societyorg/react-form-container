@@ -1,6 +1,6 @@
 import { createSelector } from 'reselect';
 
-const selectForm = (key = 'form') => (state) => state.get(key)
+const selectForm = (key = 'form') => (state) => state.get(key);
 
 const makeSelectFormValues = (formIdentifier) => createSelector(
   selectForm(formIdentifier),

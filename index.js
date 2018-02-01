@@ -1,5 +1,6 @@
+import utilities from '@source4society/scepter-utility-lib';
 import React from 'react';
-import { Map as ImmutableMap } from 'immutable';
+import { fromJS, Map as immutableMap } from 'immutable';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { compose } from 'redux';
@@ -16,18 +17,17 @@ import {
     makeSelectFormValues,
     makeSelectIsValid,
 } from './selectors';
-import { fromJS }  from 'immutable';
 
 export class FormContainer extends React.PureComponent { // eslint-disable-line react/prefer-stateless-function
 
   componentDidMount() {
-    if (typeof this.props.fieldData !== 'undefined' && this.props.id !== '') {  
+    if (typeof this.props.fieldData !== 'undefined' && this.props.id !== '') {
       this.props.initializeValues(this.props.id, this.props.fieldData, this.props.reducerKey);
     }
   }
 
-  componentWillReceiveProps(nextProps) {   
-    if (typeof nextProps.fieldData !== 'undefined' && !nextProps.fieldData.equals(this.props.fieldData) && nextProps.id !== '') {    
+  componentWillReceiveProps(nextProps) {
+    if (typeof nextProps.fieldData !== 'undefined' && !nextProps.fieldData.equals(this.props.fieldData) && nextProps.id !== '') {
       this.props.initializeValues(nextProps.id, nextProps.fieldData, nextProps.reducerKey);
     }
 
@@ -39,57 +39,62 @@ export class FormContainer extends React.PureComponent { // eslint-disable-line 
   }
 
   prepareOptions(field) {
-    let options = [];
+    const options = [];
     if (typeof field.get('options') !== 'undefined') {
-      return field.get('options')
+      return field.get('options');
     } else if (typeof field.get('enum_titles') !== 'undefined') {
-      field.get('enum_titles').map((titles, index) => {
-        options.push({value: field.get('enum').get(index), label: titles});
-      });
+      field.get('enum_titles').map((titles, index) => (
+        options.push({ value: field.get('enum').get(index), label: titles })
+      ));
       return fromJS(options);
-    } else {
-      return ImmutableMap({})
     }
-    field[1].get('options', ImmutableMap({}))
+
+    return field[1].get('options', immutableMap({}));
   }
 
   renderFields() {
-    let fields = [];
-    let fieldPointer = null;
-    if (typeof this.props.fieldData !== 'undefined' && typeof this.props.fieldData.get('data') !== 'undefined') {      
-      for(let index = 0; index <= this.props.fieldData.get('data').size; index++) {
-        for(let field of this.props.fieldData.get('data').entries()) {
-          if(field[1].get('propertyOrder', 0) === index) {
+    const fields = [];
+    if (typeof this.props.fieldData !== 'undefined' && typeof this.props.fieldData.get('data') !== 'undefined') {
+      for (let index = 0; index <= this.props.fieldData.get('data').size; index += 1) {
+        this.props.fieldData.get('data').entries().each((field) => {
+          if (field[1].get('propertyOrder', 0) === index) {
             fields.push(
               <Field
                 key={field[0]}
                 id={field[0]}
                 fieldData={field[1]}
-                labelText={index === 0 ? null : this.props.labels[index-1]}
+                labelText={index === 0 ? null : this.props.labels[index - 1]}
                 fieldType={field[1].get('widget', 'text')}
                 onChange={(evt) => this.props.onChangeFieldValue(evt, field[0], this.props.reducerKey, field[1])}
                 value={this.props.formValues.getIn([this.props.id, field[0], 'value'], '')}
                 isValid={this.props.formValues.getIn([this.props.id, field[0], 'isValid'])}
-                validationMessage={this.props.formValues.getIn([this.props. id, field[0], 'validationMessage'])}
+                validationMessage={this.props.formValues.getIn([this.props.id, field[0], 'validationMessage'])}
                 layout={field[1].get('layout', 'vertical')}
                 options={this.prepareOptions(field[1])}
                 hideLabel={field[1].get('hideLabel', false)}
-                checked={this.props.formValues.getIn([this.props.id, field[0], 'checked'], field[1].get('checked', false))}
+                checked={this.props.formValues.getIn(
+                  [this.props.id, field[0], 'checked'],
+                  field[1].get('checked', false)
+                )}
                 text={field[1].get('text')}
                 formLayout={this.props.formLayout}
                 defaultOption={field[1].get('default_option', undefined)}
                 moreProps={this.props}
                 utcOffset={field[1].get('utcOffset', global.utcOffset)}
-                onBlur={(evt) => this.props.onBlur(evt, this.props.id, this.props.reducerKey, field[0], this.props.formValues)}
-                onFocus={(evt) => this.props.onFocus(evt, this.props.id, this.props.reducerKey, field[0], this.props.formValues)}
+                onBlur={(evt) =>
+                  this.props.onBlur(evt, this.props.id, this.props.reducerKey, field[0], this.props.formValues)
+                }
+                onFocus={(evt) =>
+                  this.props.onFocus(evt, this.props.id, this.props.reducerKey, field[0], this.props.formValues)
+                }
                 fieldOverride={this.props.fieldOverride}
                 editMode={this.props.editMode}
               >
                 {field[1].get('children', null)}
-              </Field>     
+              </Field>
             );
           }
-        }
+        });
       }
     }
     return fields;
@@ -97,7 +102,23 @@ export class FormContainer extends React.PureComponent { // eslint-disable-line 
 
   renderSubmit() {
     if (typeof this.props.submitLabel !== 'undefined') {
-      return <button className={'submit ' + (this.props.submitDisabled ? 'disabled' : '')} disabled={this.props.submitDisabled} onClick={(evt) => this.props.onSubmit(evt, this.props.formValues, this.props.id, this.props.callbackAction, this.props.fieldData, this.props.reducerKey)}>{this.props.submitLabel}</button>;
+      return (
+        <button
+          className={`submit ${utilities.ifTrueElseDefault(this.props.submitDisabled, 'disabled', '')}`}
+          disabled={this.props.submitDisabled}
+          onClick={(evt) =>
+            this.props.onSubmit(evt,
+              this.props.formValues,
+              this.props.id,
+              this.props.callbackAction,
+              this.props.fieldData,
+              this.props.reducerKey
+            )
+          }
+        >
+          {this.props.submitLabel}
+        </button>
+      );
     }
 
     return null;
@@ -105,7 +126,19 @@ export class FormContainer extends React.PureComponent { // eslint-disable-line 
 
   render() {
     return (
-      <Form id={this.props.id} onSubmit={(evt) => this.props.onSubmit(evt, this.props.formValues, this.props.id, this.props.callbackAction, this.props.fieldData)} formLayout={this.props.formLayout}>
+      <Form
+        id={this.props.id}
+        onSubmit={(evt) =>
+          this.props.onSubmit(
+            evt,
+            this.props.formValues,
+            this.props.id,
+            this.props.callbackAction,
+            this.props.fieldData
+          )
+        }
+        formLayout={this.props.formLayout}
+      >
         {this.renderFields()}
         {this.renderSubmit()}
         {this.props.children}
@@ -128,6 +161,12 @@ FormContainer.propTypes = {
   submitDisabled: PropTypes.bool,
   reducerKey: PropTypes.string,
   fieldOverride: PropTypes.func,
+  forceSubmit: PropTypes.bool,
+  formLayout: PropTypes.string,
+  onBlur: PropTypes.func,
+  onFocus: PropTypes.func,
+  editMode: PropTypes.bool,
+  children: PropTypes.any,
 };
 
 FormContainer.defaultProps = {
@@ -142,11 +181,18 @@ FormContainer.defaultProps = {
 };
 
 export const mapDispatchToProps = (dispatch, ownProps) => ({
-  initializeValues: (id, fieldData, reducerKey) => dispatch(initializeValues(id, fieldData, reducerKey)),
-  onChangeFieldValue: (evt, field, reducerKey, fieldData) => dispatch(changeField(ownProps.id, field, evt.target.value, evt.target.checked, evt.target, reducerKey, fieldData)),
-  onSubmit: (evt, formValues, id, callbackAction, fieldData, reducerKey) => { evt.preventDefault(); return dispatch(submitForm(formValues, ownProps.validation, id, callbackAction, fieldData, reducerKey)); },
-  onBlur: (evt, formTitle, reducerKey, property, formValues) => dispatch(blurField(evt, formTitle, reducerKey, property, formValues)),
-  onFocus: (evt, formTitle, reducerKey, property, formValues) => dispatch(focusField(evt, formTitle, reducerKey, property, formValues))
+  initializeValues: (id, fieldData, reducerKey) =>
+    dispatch(initializeValues(id, fieldData, reducerKey)),
+  onChangeFieldValue: (evt, field, reducerKey, fieldData) =>
+    dispatch(changeField(ownProps.id, field, evt.target.value, evt.target.checked, evt.target, reducerKey, fieldData)),
+  onSubmit: (evt, formValues, id, callbackAction, fieldData, reducerKey) => {
+    evt.preventDefault();
+    return dispatch(submitForm(formValues, ownProps.validation, id, callbackAction, fieldData, reducerKey));
+  },
+  onBlur: (evt, formTitle, reducerKey, property, formValues) =>
+    dispatch(blurField(evt, formTitle, reducerKey, property, formValues)),
+  onFocus: (evt, formTitle, reducerKey, property, formValues) =>
+    dispatch(focusField(evt, formTitle, reducerKey, property, formValues)),
 });
 
 const mapStateToProps = (state, ownProps) => (
@@ -155,7 +201,7 @@ const mapStateToProps = (state, ownProps) => (
     isValid: makeSelectIsValid(ownProps.reducerKey),
     submitDisabled: makeSelectSubmitDisabled(ownProps.reducerKey),
   })
-)
+);
 
 const withReducer = injectReducer({ key: 'form', reducer, isNamespaced: true });
 const withSaga = injectSaga({ key: 'form', saga });
@@ -165,4 +211,4 @@ export default compose(
   withReducer,
   withSaga,
   withConnect
-)(FormContainer);    
+)(FormContainer);

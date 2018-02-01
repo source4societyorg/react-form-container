@@ -1,5 +1,3 @@
-import { fromJS, Map as ImmutableMap } from 'immutable';
-import utilities from '@source4society/scepter-utility-lib'
 export const FORM_INITIALIZED = 'source4society/react-form-container/FORM_INITIALIZED';
 export const FETCHED_FORM_DATA = 'source4society/ract-form-container/FETCHED_FORM_DATA';
 export const CHANGE_FIELD = 'source4society/react-form-container/CHANGE_FIELD';
