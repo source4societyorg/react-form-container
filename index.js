@@ -49,48 +49,48 @@ export class FormContainer extends React.PureComponent { // eslint-disable-line 
       return fromJS(options);
     }
 
-    return field[1].get('options', immutableMap({}));
+    return immutableMap({});
   }
 
   renderFields() {
     const fields = [];
     if (typeof this.props.fieldData !== 'undefined' && typeof this.props.fieldData.get('data') !== 'undefined') {
       for (let index = 0; index <= this.props.fieldData.get('data').size; index += 1) {
-        this.props.fieldData.get('data').entries().each((field) => {
-          if (field[1].get('propertyOrder', 0) === index) {
+        this.props.fieldData.get('data').forEach((field, fieldKey) => {
+          if (field.get('propertyOrder', 0) === index) {
             fields.push(
               <Field
-                key={field[0]}
-                id={field[0]}
-                fieldData={field[1]}
+                key={field.get('propertyOrder')}
+                id={fieldKey}
+                fieldData={field}
                 labelText={index === 0 ? null : this.props.labels[index - 1]}
-                fieldType={field[1].get('widget', 'text')}
-                onChange={(evt) => this.props.onChangeFieldValue(evt, field[0], this.props.reducerKey, field[1])}
-                value={this.props.formValues.getIn([this.props.id, field[0], 'value'], '')}
-                isValid={this.props.formValues.getIn([this.props.id, field[0], 'isValid'])}
-                validationMessage={this.props.formValues.getIn([this.props.id, field[0], 'validationMessage'])}
-                layout={field[1].get('layout', 'vertical')}
-                options={this.prepareOptions(field[1])}
-                hideLabel={field[1].get('hideLabel', false)}
+                fieldType={field.get('widget', 'text')}
+                onChange={(evt) => this.props.onChangeFieldValue(evt, fieldKey, this.props.reducerKey, field)}
+                value={this.props.formValues.getIn([this.props.id, fieldKey, 'value'], '')}
+                isValid={this.props.formValues.getIn([this.props.id, fieldKey, 'isValid'])}
+                validationMessage={this.props.formValues.getIn([this.props.id, fieldKey, 'validationMessage'])}
+                layout={field.get('layout', 'vertical')}
+                options={this.prepareOptions(field)}
+                hideLabel={field.get('hideLabel', false)}
                 checked={this.props.formValues.getIn(
-                  [this.props.id, field[0], 'checked'],
-                  field[1].get('checked', false)
+                  [this.props.id, fieldKey, 'checked'],
+                  field.get('checked', false)
                 )}
-                text={field[1].get('text')}
+                text={field.get('text')}
                 formLayout={this.props.formLayout}
-                defaultOption={field[1].get('default_option', undefined)}
+                defaultOption={field.get('default_option', undefined)}
                 moreProps={this.props}
-                utcOffset={field[1].get('utcOffset', global.utcOffset)}
+                utcOffset={field.get('utcOffset', global.utcOffset)}
                 onBlur={(evt) =>
-                  this.props.onBlur(evt, this.props.id, this.props.reducerKey, field[0], this.props.formValues)
+                  this.props.onBlur(evt, this.props.id, this.props.reducerKey, fieldKey, this.props.formValues)
                 }
                 onFocus={(evt) =>
-                  this.props.onFocus(evt, this.props.id, this.props.reducerKey, field[0], this.props.formValues)
+                  this.props.onFocus(evt, this.props.id, this.props.reducerKey, fieldKey, this.props.formValues)
                 }
                 fieldOverride={this.props.fieldOverride}
                 editMode={this.props.editMode}
               >
-                {field[1].get('children', null)}
+                {field.get('children', null)}
               </Field>
             );
           }
